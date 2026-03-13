@@ -327,6 +327,29 @@
   .tipi-group label:has(input:checked) { border-color: var(--rose); background: var(--blush); color: var(--deep); font-weight: 600; }
   .tipi-group input[type="radio"] { accent-color: var(--rose); }
 
+  /* ─── PERIOD NOTE ─── */
+  .period-note {
+    margin: 0 28px 4px;
+    padding: 10px 16px;
+    background: linear-gradient(90deg, rgba(244,164,176,0.12), rgba(251,196,171,0.10));
+    border-left: 3px solid var(--rose);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.82rem;
+    color: var(--subtext);
+  }
+  .period-note strong { color: var(--deep); }
+  /* ─── PRIVACY HINT ─── */
+  .privacy-hint {
+    display: block;
+    padding: 8px 14px;
+    background: rgba(184,216,234,0.18);
+    border: 1px solid rgba(184,216,234,0.5);
+    border-radius: 8px;
+    font-size: 0.78rem;
+    color: #5a7a8a;
+    line-height: 1.6;
+  }
+
   /* ─── HINT ─── */
   .hint { font-size: 0.78rem; color: var(--subtext); margin-top: 4px; }
 
@@ -402,6 +425,185 @@
 
   /* ─── FOOTER ─── */
   .site-footer { text-align: center; padding: 24px 16px 32px; color: var(--subtext); font-size: 0.75rem; }
+
+  /* ─── PRIVACY MODAL ─── */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(90, 58, 68, 0.45);
+    backdrop-filter: blur(4px);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .modal-overlay.open { display: flex; animation: fadeOverlay 0.25s ease; }
+  @keyframes fadeOverlay { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal-box {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: 0 16px 48px rgba(90,58,68,0.22);
+    max-width: 680px;
+    width: 100%;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    animation: slideUp 0.28s cubic-bezier(.22,.68,0,1.2);
+    overflow: hidden;
+  }
+  @keyframes slideUp { from { transform: translateY(32px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+  .modal-header {
+    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 60%, #f9d4c2 100%);
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .modal-header h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.06em;
+  }
+  .modal-close {
+    background: rgba(255,255,255,0.25);
+    border: none;
+    border-radius: 50%;
+    width: 34px; height: 34px;
+    font-size: 1.1rem;
+    color: #fff;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .modal-close:hover { background: rgba(255,255,255,0.42); }
+
+  .modal-body {
+    overflow-y: auto;
+    padding: 28px 32px 32px;
+    flex: 1;
+    scroll-behavior: smooth;
+  }
+  .modal-body::-webkit-scrollbar { width: 6px; }
+  .modal-body::-webkit-scrollbar-track { background: var(--blush); border-radius: 3px; }
+  .modal-body::-webkit-scrollbar-thumb { background: var(--rose); border-radius: 3px; }
+
+  .pp-section { margin-bottom: 28px; }
+  .pp-section:last-child { margin-bottom: 0; }
+  .pp-section h3 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--deep);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--blush);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pp-section h3::before {
+    content: '';
+    display: inline-block;
+    width: 4px; height: 16px;
+    background: linear-gradient(180deg, var(--rose), var(--peach));
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .pp-section p {
+    font-size: 0.86rem;
+    color: var(--text);
+    line-height: 1.85;
+  }
+  .pp-section ul {
+    margin: 8px 0 0 4px;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .pp-section ul li {
+    font-size: 0.86rem;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .pp-section .pp-caution {
+    background: var(--blush);
+    border-left: 3px solid var(--rose);
+    border-radius: 0 8px 8px 0;
+    padding: 12px 16px;
+    font-size: 0.84rem;
+    color: var(--text);
+    line-height: 1.8;
+    margin-top: 8px;
+  }
+  .pp-section .pp-caution strong { color: var(--deep); }
+  .pp-meta {
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border);
+    font-size: 0.78rem;
+    color: var(--subtext);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .modal-footer {
+    padding: 16px 28px;
+    border-top: 1px solid var(--border);
+    background: var(--soft);
+    text-align: center;
+    flex-shrink: 0;
+  }
+  .modal-footer .btn-modal-close {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 36px;
+    background: linear-gradient(120deg, #f4a4b0, #fbc4ab);
+    color: #fff; border: none; border-radius: 50px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 0.9rem; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(244,164,176,0.38);
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .modal-footer .btn-modal-close:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(244,164,176,0.48); }
+
+  /* ─── AGREE CHECKBOX ─── */
+  .agree-wrap {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 28px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .agree-wrap input[type="checkbox"] {
+    width: 20px; height: 20px;
+    accent-color: var(--rose);
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .agree-wrap label {
+    font-size: 0.88rem;
+    color: var(--text);
+    cursor: pointer;
+    line-height: 1.5;
+  }
+  .agree-wrap label a {
+    color: var(--rose);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .agree-wrap label a:hover { color: var(--mauve); }
 
   /* ─── RESPONSIVE ─── */
   @media (max-width: 580px) {
@@ -492,7 +694,7 @@
     </details>
     <div class="intro-note">
       ご入力いただいた情報は、納品資料の作成のみに利用します。<br>
-      情報の取り扱いについては<a href="https://prodiet-gjb.com/privacy-policy/" target="_blank">プライバシーポリシー</a>をご確認ください。
+      情報の取り扱いについては<a href="#" onclick="openPrivacyModal(event)">プライバシーポリシー</a>をご確認ください。
     </div>
   </div>
 
@@ -513,7 +715,7 @@
     <div class="field-row">
       <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">ニックネーム</span></div>
       <div class="field-input">
-        <input type="text" name="nickname" required minlength="4" maxlength="10" placeholder="4〜10文字で入力してください">
+        <input type="text" name="nickname" required minlength="1" maxlength="10" placeholder="例: りえ、けん、さくら（10文字以内）">
       </div>
     </div>
 
@@ -538,7 +740,7 @@
     <div class="field-row">
       <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">身長</span></div>
       <div class="field-input">
-        <input type="number" name="height" required min="50" max="250" step="0.1" placeholder="例: 158.5">
+        <input type="number" name="height" required min="50" max="250" step="0.1" inputmode="decimal" placeholder="例: 158.5">
         <span class="hint">cm</span>
       </div>
     </div>
@@ -546,7 +748,7 @@
     <div class="field-row">
       <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">現在の体重</span></div>
       <div class="field-input">
-        <input type="number" name="weight" required min="30" max="200" step="0.1" placeholder="例: 55.0">
+        <input type="number" name="weight" required min="30" max="200" step="0.1" inputmode="decimal" placeholder="例: 55.0">
         <span class="hint">kg</span>
       </div>
     </div>
@@ -554,7 +756,7 @@
     <div class="field-row">
       <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">腹囲</span></div>
       <div class="field-input">
-        <input type="number" name="waist" min="50" max="200" step="0.1" placeholder="例: 73.0">
+        <input type="number" name="waist" min="50" max="200" step="0.1" inputmode="decimal" placeholder="例: 73.0">
         <span class="hint">cm</span>
       </div>
     </div>
@@ -562,7 +764,7 @@
     <div class="field-row">
       <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">体脂肪率</span></div>
       <div class="field-input">
-        <input type="number" name="bodyfat" min="0.1" max="70" step="0.1" placeholder="例: 28.5">
+        <input type="number" name="bodyfat" min="0.1" max="70" step="0.1" inputmode="decimal" placeholder="例: 28.5">
         <span class="hint">%</span>
       </div>
     </div>
@@ -570,13 +772,13 @@
     <div class="field-row">
       <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">20歳頃の体重</span></div>
       <div class="field-input">
-        <input type="number" name="TwentyWeight" min="30" max="200" step="0.1" placeholder="例: 50.0">
-        <span class="hint">kg</span>
+        <input type="number" name="TwentyWeight" min="30" max="200" step="0.1" inputmode="decimal" placeholder="例: 50.0">
+        <span class="hint">kg ※不明な場合は空欄で構いません</span>
       </div>
     </div>
 
     <div class="field-row">
-      <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">既往症・服薬</span></div>
+      <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">現病歴・服薬</span></div>
       <div class="field-input">
         <div class="check-group vertical" id="medicine-group">
           <label><input type="checkbox" name="medicine[]" value="糖尿病"><span>糖尿病</span></label>
@@ -585,6 +787,11 @@
           <label><input type="checkbox" name="medicine[]" value="その他"><span>その他</span></label>
         </div>
       </div>
+    </div>
+
+    <div class="field-row privacy-note-row">
+      <div class="field-label"></div>
+      <div class="field-input"><span class="hint privacy-hint">🔒 ご入力いただいた情報は、分析およびアドバイスの生成のみに使用し、第三者に公開されることはありません。</span></div>
     </div>
 
     <div class="cond-group" id="grp-otherMedicine">
@@ -680,16 +887,6 @@
     </div>
 
     <div class="field-row">
-      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">意識的に体を動かす</span></div>
-      <div class="field-input">
-        <div class="radio-group">
-          <label><input type="radio" name="MoveBody" value="はい" required><span>はい</span></label>
-          <label><input type="radio" name="MoveBody" value="いいえ"><span>いいえ</span></label>
-        </div>
-      </div>
-    </div>
-
-    <div class="field-row">
       <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">運動頻度</span></div>
       <div class="field-input">
         <select name="exercise" required id="exercise-select">
@@ -712,6 +909,7 @@
     </div>
 
     <div class="section-subheader">🍽️ 食事習慣</div>
+    <div class="period-note">以下の質問は、<strong>ここ1ヶ月の平均的な食事・生活</strong>についてお答えください。</div>
 
     <div class="field-row">
       <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">食事の準備</span></div>
@@ -731,8 +929,7 @@
         <div class="check-group vertical">
           <label><input type="checkbox" name="DietaryRules[]" value="1日3食未満"><span>1日3食未満</span></label>
           <label><input type="checkbox" name="DietaryRules[]" value="食事時間が不規則"><span>食事時間が不規則</span></label>
-          <label><input type="checkbox" name="DietaryRules[]" value="夕食が遅い"><span>夕食が遅い</span></label>
-          <label><input type="checkbox" name="DietaryRules[]" value="就寝1時間以内に食べる習慣がある"><span>就寝1時間以内に食べる習慣がある</span></label>
+          <label><input type="checkbox" name="DietaryRules[]" value="夕食が21時以降になる"><span>夕食が21時以降になる</span></label>
           <label><input type="checkbox" name="DietaryRules[]" value="食べるスピードが早い"><span>食べるスピードが早い</span></label>
           <label><input type="checkbox" name="DietaryRules[]" value="お腹が減ったら間食する"><span>お腹が減ったら間食する</span></label>
           <label><input type="checkbox" name="DietaryRules[]" value="上記に当てはまるものはない"><span>上記に当てはまるものはない</span></label>
@@ -741,27 +938,27 @@
     </div>
 
     <div class="field-row">
-      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">甘いものが好きだ</span></div>
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">甘いものは好きですか？</span></div>
       <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_1" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_1" value="いいえ"><span>いいえ</span></label></div></div>
     </div>
 
     <div class="field-row">
-      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">こってりした食事が好きだ</span></div>
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">こってりした食事は好きですか？</span></div>
       <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_2" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_2" value="いいえ"><span>いいえ</span></label><label><input type="radio" name="TasteTrends_2" value="どちらでもない"><span>どちらでもない</span></label></div></div>
     </div>
 
     <div class="field-row">
-      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">味が濃いものが好きだ</span></div>
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">味が濃いものは好きですか？</span></div>
       <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_3" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_3" value="いいえ"><span>いいえ</span></label></div></div>
     </div>
 
     <div class="field-row">
-      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">お腹いっぱい食べることが多い</span></div>
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">お腹いっぱい食べることが多いですか？</span></div>
       <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_4" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_4" value="いいえ"><span>いいえ</span></label></div></div>
     </div>
 
     <div class="field-row">
-      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">スナック菓子が好きだ</span></div>
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">スナック菓子は好きですか？</span></div>
       <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_5" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_5" value="いいえ"><span>いいえ</span></label></div></div>
     </div>
 
@@ -771,7 +968,7 @@
     </div>
 
     <div class="field-row">
-      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">揚げ物を週3回以上食べる</span></div>
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">揚げ物を週3回以上食べますか？</span></div>
       <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_7" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_7" value="いいえ"><span>いいえ</span></label></div></div>
     </div>
 
@@ -814,6 +1011,18 @@
     <div class="section-subheader">🍶 飲酒習慣</div>
 
     <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">お酒を飲みますか？</span></div>
+      <div class="field-input">
+        <div class="radio-group" id="drinker-group">
+          <label><input type="radio" name="drinker" value="飲む" required><span>飲む</span></label>
+          <label><input type="radio" name="drinker" value="飲まない"><span>飲まない</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="cond-group" id="grp-alcohol">
+
+    <div class="field-row">
       <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">飲酒頻度</span></div>
       <div class="field-input">
         <div class="radio-group vertical">
@@ -845,15 +1054,18 @@
     <div class="field-row">
       <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">飲酒量（1回あたり）</span></div>
       <div class="field-input">
+        <span class="hint" style="margin-bottom:8px">目安: ビール中ジョッキ≒500ml　ワイングラス1杯≒120ml　日本酒1合≒180ml　ウィスキーシングル≒30ml</span>
         <div class="drink-grid">
-          <div class="drink-item"><label>ビール（ml）</label><input type="number" name="beer" min="0" placeholder="例: 350"></div>
-          <div class="drink-item"><label>焼酎 原液（ml）</label><input type="number" name="shochu" min="0" placeholder="例: 60"></div>
-          <div class="drink-item"><label>ワイン（ml）</label><input type="number" name="wine" min="0" placeholder="例: 120"></div>
-          <div class="drink-item"><label>ウィスキー（ml）</label><input type="number" name="whiskey" min="0" placeholder="例: 45"></div>
-          <div class="drink-item"><label>日本酒（ml）</label><input type="number" name="JapaneseSake" min="0" placeholder="例: 180"></div>
+          <div class="drink-item"><label>ビール（ml）</label><input type="number" name="beer" min="0" inputmode="numeric" placeholder="例: 500"></div>
+          <div class="drink-item"><label>焼酎（ストレート換算・ml）</label><input type="number" name="shochu" min="0" inputmode="numeric" placeholder="例: 60"></div>
+          <div class="drink-item"><label>ワイン（ml）</label><input type="number" name="wine" min="0" inputmode="numeric" placeholder="例: 120"></div>
+          <div class="drink-item"><label>ウィスキー（ml）</label><input type="number" name="whiskey" min="0" inputmode="numeric" placeholder="例: 30"></div>
+          <div class="drink-item"><label>日本酒（ml）</label><input type="number" name="JapaneseSake" min="0" inputmode="numeric" placeholder="例: 180"></div>
         </div>
       </div>
     </div>
+
+    </div><!-- /grp-alcohol -->
 
     <div class="section-subheader">🌙 睡眠</div>
 
@@ -992,7 +1204,8 @@
   <div class="form-section">
     <div class="section-header">
       <h2>性格特性</h2>
-      <p>以下の各項目が、あなた自身にどの程度当てはまるかをお答えください。</p>
+      <p>よりパーソナライズされたアドバイスのために、あなたの性格についても少し教えてください。</p>
+      <p style="margin-top:6px;font-size:0.78rem;opacity:0.85">以下の10項目が、あなた自身にどの程度当てはまるかお答えください。「全く違う」〜「強くそう思う」の7段階でお選びください。</p>
     </div>
 
     <div class="field-row">
@@ -1116,7 +1329,7 @@
     <div class="field-row">
       <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">最大体重</span></div>
       <div class="field-input">
-        <input type="number" name="maxWeight" required min="30" max="200" step="0.1" placeholder="これまでの最大体重">
+        <input type="number" name="maxWeight" required min="30" max="200" step="0.1" inputmode="decimal" placeholder="これまでの最大体重">
         <span class="hint">kg</span>
       </div>
     </div>
@@ -1132,11 +1345,18 @@
     <div class="field-row">
       <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">目標体重</span></div>
       <div class="field-input">
-        <input type="number" name="idealWeight" required min="30" max="110" step="0.1" placeholder="理想の体重">
+        <input type="number" name="idealWeight" required min="30" max="110" step="0.1" inputmode="decimal" placeholder="理想の体重">
         <span class="hint">kg</span>
       </div>
     </div>
   </div><!-- /section -->
+
+  <div class="agree-wrap">
+    <input type="checkbox" id="agreePrivacy">
+    <label for="agreePrivacy">
+      <a href="#" onclick="openPrivacyModal(event)">プライバシーポリシー</a>に同意する
+    </label>
+  </div>
 
   <div class="page-nav">
     <button type="button" class="btn-nav btn-prev" onclick="goPrev()">‹ 性格特性へ</button>
@@ -1148,6 +1368,87 @@
 </form>
 </div><!-- /.main-wrap -->
 
+<!-- ══════════════════════════════════════════
+     プライバシーポリシー モーダル
+══════════════════════════════════════════ -->
+<div class="modal-overlay" id="privacyModal" onclick="handleOverlayClick(event)">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-header">
+      <h2 id="modalTitle">🔒 プライバシーポリシー</h2>
+      <button class="modal-close" onclick="closePrivacyModal()" aria-label="閉じる">✕</button>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="pp-section">
+        <h3>1. はじめに</h3>
+        <p>ダイエットを最適化する問診票（以下、「当方」といいます）は、ユーザーの皆様からお預かりする個人情報および健康に関するデータの重要性を認識し、その保護を徹底いたします。本問診票を通じて取得した情報は、適切な管理のもと、本ポリシーに従って取り扱います。</p>
+      </div>
+
+      <div class="pp-section">
+        <h3>2. 取得する情報</h3>
+        <p>本問診票では、最適化されたダイエットアドバイスを提供するため、以下の情報を取得します。</p>
+        <ul>
+          <li>基本属性（ニックネーム、年齢、性別など）</li>
+          <li>身体データ（身長、体重、腹囲、体脂肪率など）</li>
+          <li>健康・生活習慣に関する情報（既往歴、血液検査値、食事習慣、飲酒・喫煙習慣など）</li>
+          <li>心理・性格特性に関する情報（TIPI-J等に基づく性格診断結果）</li>
+        </ul>
+      </div>
+
+      <div class="pp-section">
+        <h3>3. 利用目的</h3>
+        <p>取得した情報は、以下の目的でのみ利用します。</p>
+        <ul>
+          <li>ユーザーに合わせたパーソナライズされたダイエット分析結果およびアドバイスの生成</li>
+          <li>サービスの品質向上、および分析アルゴリズムの改善</li>
+          <li>お問い合わせへの対応</li>
+        </ul>
+      </div>
+
+      <div class="pp-section">
+        <h3>4. データの管理と安全性</h3>
+        <p>当方は、取得した情報の漏洩、滅失、または毀損を防止するため、適切なセキュリティ対策を講じています。回答データは暗号化された通信（SSL/TLS）を通じて送信され、アクセス制限のある環境下で厳重に保管されます。</p>
+      </div>
+
+      <div class="pp-section">
+        <h3>5. 第三者への提供</h3>
+        <p>当方は、次の場合を除き、ユーザーの同意なく個人データを第三者に提供することはありません。</p>
+        <ul>
+          <li>法令に基づく場合</li>
+          <li>人の生命、身体または財産の保護のために必要がある場合</li>
+        </ul>
+      </div>
+
+      <div class="pp-section">
+        <h3>6. 免責事項（医療に関する注意）</h3>
+        <div class="pp-caution">
+          本問診票およびそれに基づく分析結果は、情報の提供を目的としたものであり、<strong>医師による診断や医療行為に代わるものではありません。</strong><br>
+          現在治療中の方や、健康状態に不安がある方は、必ず専門医の指示に従ってください。本サービスの利用により生じた直接的、間接的な損害について、当方は一切の責任を負いかねます。
+        </div>
+      </div>
+
+      <div class="pp-section">
+        <h3>7. お問い合わせ・データの削除</h3>
+        <p>ご自身の登録情報の確認、修正、または削除を希望される場合は、以下までご連絡ください。</p>
+        <p style="margin-top:10px;padding:12px 16px;background:var(--soft);border-radius:10px;font-size:0.84rem;color:var(--subtext);">
+          📩 お問い合わせ先：メールアドレスやフォームのURL、またはSNSのDM窓口など
+        </p>
+      </div>
+
+      <div class="pp-meta">
+        <span>制定日：2026年3月10日</span>
+        <span>運営者名：ダイエットを最適化する問診票 ／ けー</span>
+      </div>
+
+    </div><!-- /.modal-body -->
+
+    <div class="modal-footer">
+      <button class="btn-modal-close" onclick="closePrivacyModal()">閉じる</button>
+    </div>
+  </div>
+</div>
+
 <footer class="site-footer">
   <p>Copyright © 2023 分析ダイエットの専門家｜けー All Rights Reserved.</p>
 </footer>
@@ -1157,6 +1458,29 @@
 <script>
 // ── Google Apps Script WebApp URL ──
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbz_oyyU3HPhRT28130DqlmOzYa2lvtZto6hzbEgl3ahL7eHFfo4ngC0XVbbe5iGIrw4IQ/exec';
+
+// ════════════════════════════════
+// プライバシーポリシー モーダル
+// ════════════════════════════════
+function openPrivacyModal(e) {
+  if (e) e.preventDefault();
+  document.getElementById('privacyModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // モーダルを開くたびにスクロール位置をトップに
+  document.querySelector('.modal-body').scrollTop = 0;
+}
+function closePrivacyModal() {
+  document.getElementById('privacyModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function handleOverlayClick(e) {
+  // オーバーレイ背景クリックで閉じる（モーダルbox内クリックは閉じない）
+  if (e.target === document.getElementById('privacyModal')) closePrivacyModal();
+}
+// ESCキーで閉じる
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closePrivacyModal();
+});
 
 // ════════════════════════════════
 // ページ管理
@@ -1232,14 +1556,17 @@ function updateConditionalGroups() {
   const drinks = [...document.querySelectorAll('input[name="CustomaryDrink[]"]:checked')];
   toggleGroup('grp-othersdrink', drinks.some(d => d.value === 'その他'));
 
-  const exercise = document.getElementById('exercise-select').value;
-  toggleGroup('grp-ExerciseHabits', exercise && exercise !== 'ほとんどない');
+  const exercise = document.getElementById('exercise-select');
+  toggleGroup('grp-ExerciseHabits', exercise && exercise.value && exercise.value !== 'ほとんどない');
 
   const dietExp = document.querySelector('input[name="DietExperience"]:checked');
   toggleGroup('grp-pastdiet', dietExp && (dietExp.value === 'ある' || dietExp.value === '少しある'));
 
   const sleep01 = document.querySelector('input[name="SleepTendency_01"]:checked');
   toggleGroup('grp-insomnia', sleep01 && sleep01.value === 'いいえ');
+
+  const drinker = document.querySelector('input[name="drinker"]:checked');
+  toggleGroup('grp-alcohol', drinker && drinker.value === '飲む');
 }
 
 function toggleGroup(id, show) {
@@ -1267,6 +1594,12 @@ function showToast(msg, duration = 4000) {
 async function submitForm() {
   const form = document.getElementById('dietForm');
   const btn  = document.getElementById('submitBtn');
+
+  // プライバシーポリシー同意チェック
+  if (!document.getElementById('agreePrivacy').checked) {
+    showToast('⚠️ プライバシーポリシーへの同意が必要です。', 3500);
+    return;
+  }
 
   // 最終ページのバリデーション
   const page = document.getElementById('page-' + currentPage);
