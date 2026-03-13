@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>あなたのダイエットを最適化する問診票</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rose:    #f4a4b0;
+    --peach:   #fbc4ab;
+    --cream:   #fff8f5;
+    --blush:   #fde8e4;
+    --mauve:   #c97b8a;
+    --deep:    #7a3e50;
+    --soft:    #f9eff2;
+    --border:  #f0d5db;
+    --text:    #5a3a44;
+    --subtext: #a07080;
+    --white:   #ffffff;
+    --shadow:  0 4px 24px rgba(193,120,140,0.10);
+    --radius:  18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    background: linear-gradient(135deg, #fce4ec 0%, #fdf3f0 40%, #e8f4f8 100%);
+    min-height: 100vh;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 60%, #f9d4c2 100%);
+    text-align: center;
+    padding: 48px 20px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+  .site-header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.08'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+    pointer-events: none;
+  }
+  .site-header h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: clamp(1.4rem, 4vw, 2rem);
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.08em;
+    text-shadow: 0 2px 8px rgba(122,62,80,0.2);
+    position: relative;
+  }
+  .site-header p {
+    color: rgba(255,255,255,0.88);
+    font-size: 0.85rem;
+    margin-top: 8px;
+    position: relative;
+  }
+
+  /* ─── STEP BAR (fixed top below header) ─── */
+  .stepbar-outer {
+    position: sticky;
+    top: 0;
+    z-index: 200;
+    background: rgba(255,255,255,0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(193,120,140,0.10);
+  }
+  .stepbar {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+  }
+  .step-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    flex: 1;
+    position: relative;
+    cursor: default;
+  }
+  /* connector line between nodes */
+  .step-node:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 16px;
+    left: calc(50% + 16px);
+    right: calc(-50% + 16px);
+    height: 2px;
+    background: var(--border);
+    transition: background 0.3s;
+    z-index: 0;
+  }
+  .step-node.done:not(:last-child)::after,
+  .step-node.active:not(:last-child)::after {
+    background: var(--rose);
+  }
+  .step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    background: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--subtext);
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .step-node.active .step-circle {
+    background: linear-gradient(135deg, var(--rose), var(--peach));
+    border-color: var(--rose);
+    color: #fff;
+    box-shadow: 0 0 0 4px rgba(244,164,176,0.22);
+  }
+  .step-node.done .step-circle {
+    background: var(--mauve);
+    border-color: var(--mauve);
+    color: #fff;
+  }
+  .step-node.done .step-circle::after {
+    content: '✓';
+    font-size: 0.78rem;
+  }
+  .step-node.done .step-num { display: none; }
+  .step-label {
+    font-size: 0.65rem;
+    color: var(--subtext);
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
+    transition: color 0.3s;
+  }
+  .step-node.active .step-label { color: var(--deep); font-weight: 700; }
+  .step-node.done .step-label  { color: var(--mauve); }
+
+  /* ─── MAIN WRAPPER ─── */
+  .main-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 16px 60px;
+  }
+
+  /* ─── INTRO CARD (page 1 only) ─── */
+  .intro-card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .accordion {
+    border-bottom: 1px solid var(--border);
+  }
+  .accordion summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 24px;
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--deep);
+    list-style: none;
+    font-size: 0.9rem;
+  }
+  .accordion summary::-webkit-details-marker { display: none; }
+  .accordion summary::after {
+    content: '＋';
+    font-size: 1.2rem;
+    color: var(--rose);
+    transition: transform 0.3s;
+  }
+  .accordion[open] summary::after { transform: rotate(45deg); }
+  .accordion-body { padding: 0 24px 20px; }
+  .svc-step-list { display: flex; flex-direction: column; gap: 14px; margin-top: 4px; }
+  .svc-step-item { display: flex; gap: 14px; align-items: flex-start; }
+  .svc-badge {
+    background: linear-gradient(135deg, var(--rose), var(--peach));
+    color: #fff;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 4px 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .svc-content strong { display: block; font-size: 0.9rem; color: var(--deep); margin-bottom: 2px; }
+  .svc-content span   { font-size: 0.8rem; color: var(--subtext); }
+  .intro-note {
+    padding: 14px 24px;
+    font-size: 0.78rem;
+    color: var(--subtext);
+    line-height: 1.6;
+  }
+  .intro-note a { color: var(--rose); }
+
+  /* ─── PAGE ─── */
+  .form-page { display: none; }
+  .form-page.active { display: block; animation: fadeUp 0.35s ease both; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ─── SECTION CARD ─── */
+  .form-section {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .section-header {
+    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 100%);
+    padding: 18px 28px;
+    color: #fff;
+  }
+  .section-header h2 {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+  }
+  .section-header p {
+    font-size: 0.8rem;
+    opacity: 0.88;
+    margin-top: 4px;
+  }
+  .section-subheader {
+    padding: 16px 28px 4px;
+    color: var(--mauve);
+    font-size: 0.92rem;
+    font-weight: 700;
+    border-bottom: 2px solid var(--blush);
+    margin-bottom: 4px;
+  }
+
+  /* ─── FIELD ROW ─── */
+  .field-row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    border-bottom: 1px solid var(--blush);
+  }
+  .field-row:last-child { border-bottom: none; }
+  .field-label {
+    background: var(--soft);
+    padding: 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .label-text { font-size: 0.88rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+  .field-input {
+    padding: 14px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  /* ─── BADGES ─── */
+  .badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; }
+  .badge-req { background: #f4a4b0; color: #fff; }
+  .badge-opt { background: #b8d8ea; color: #fff; }
+
+  /* ─── INPUTS ─── */
+  input[type="text"], input[type="email"], input[type="number"], select, textarea {
+    width: 100%; padding: 10px 14px;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    background: var(--cream); color: var(--text);
+    font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.88rem;
+    transition: border-color 0.2s, box-shadow 0.2s; outline: none; max-width: 100%;
+  }
+  input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
+    border-color: var(--rose);
+    box-shadow: 0 0 0 3px rgba(244,164,176,0.18);
+  }
+  textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
+  select { height: 42px; cursor: pointer; }
+  input[type="number"] { max-width: 160px; }
+
+  /* ─── RADIO / CHECKBOX ─── */
+  .radio-group, .check-group { display: flex; flex-wrap: wrap; gap: 8px; }
+  .radio-group.vertical, .check-group.vertical { flex-direction: column; gap: 6px; }
+  .radio-group label, .check-group label {
+    display: flex; align-items: center; gap: 7px; cursor: pointer;
+    font-size: 0.87rem; color: var(--text);
+    padding: 7px 14px 7px 10px;
+    border: 1.5px solid var(--border); border-radius: 50px;
+    background: var(--cream); transition: all 0.2s; user-select: none;
+  }
+  .check-group label { border-radius: 10px; }
+  .radio-group label:hover, .check-group label:hover { border-color: var(--rose); background: var(--blush); }
+  .radio-group input[type="radio"], .check-group input[type="checkbox"] {
+    width: 16px; height: 16px; accent-color: var(--rose); cursor: pointer; flex-shrink: 0;
+  }
+  .radio-group label:has(input:checked), .check-group label:has(input:checked) {
+    border-color: var(--rose); background: var(--blush);
+  }
+  .radio-group input[type="radio"]:checked + span,
+  .check-group input[type="checkbox"]:checked + span { color: var(--deep); font-weight: 600; }
+
+  /* ─── TIPI 7-scale ─── */
+  .tipi-group { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tipi-group label {
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    cursor: pointer; font-size: 0.72rem; color: var(--subtext);
+    padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 10px;
+    background: var(--cream); transition: all 0.2s; min-width: 62px; text-align: center;
+  }
+  .tipi-group label:hover { border-color: var(--rose); background: var(--blush); }
+  .tipi-group label:has(input:checked) { border-color: var(--rose); background: var(--blush); color: var(--deep); font-weight: 600; }
+  .tipi-group input[type="radio"] { accent-color: var(--rose); }
+
+  /* ─── HINT ─── */
+  .hint { font-size: 0.78rem; color: var(--subtext); margin-top: 4px; }
+
+  /* ─── CONDITIONAL GROUPS ─── */
+  .cond-group { display: none; background: var(--blush); border-left: 3px solid var(--rose); margin: 4px 0; padding: 4px 0; }
+  .cond-group.visible { display: block; }
+  .cond-group .field-row { background: transparent; }
+  .cond-group .field-label { background: rgba(255,255,255,0.5); }
+
+  /* ─── DRINK GRID ─── */
+  .drink-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+  .drink-item label { font-size: 0.8rem; color: var(--subtext); margin-bottom: 4px; display: block; }
+
+  /* ─── NAV BUTTONS ─── */
+  .page-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 8px;
+    padding: 0 4px;
+  }
+  .btn-nav {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 13px 32px;
+    border: none; border-radius: 50px;
+    font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.92rem; font-weight: 700;
+    cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
+    letter-spacing: 0.04em;
+  }
+  .btn-prev {
+    background: var(--white);
+    color: var(--mauve);
+    border: 2px solid var(--border);
+    box-shadow: 0 2px 8px rgba(193,120,140,0.08);
+  }
+  .btn-prev:hover { border-color: var(--rose); transform: translateY(-1px); }
+  .btn-next {
+    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 100%);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(244,164,176,0.40);
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(244,164,176,0.5); }
+  .btn-submit {
+    background: linear-gradient(120deg, #c97b8a 0%, #f4a4b0 50%, #fbc4ab 100%);
+    color: #fff;
+    padding: 15px 48px;
+    box-shadow: 0 4px 18px rgba(244,164,176,0.45);
+    font-size: 1rem;
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(244,164,176,0.5); }
+  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  /* ─── PAGE COUNTER ─── */
+  .page-counter {
+    font-size: 0.78rem;
+    color: var(--subtext);
+    text-align: center;
+    flex: 1;
+  }
+
+  /* ─── TOAST ─── */
+  .toast {
+    position: fixed; bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--deep); color: #fff;
+    padding: 14px 28px; border-radius: 50px; font-size: 0.88rem;
+    box-shadow: 0 6px 24px rgba(0,0,0,0.15);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0; z-index: 1000; white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  /* ─── FOOTER ─── */
+  .site-footer { text-align: center; padding: 24px 16px 32px; color: var(--subtext); font-size: 0.75rem; }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 580px) {
+    .field-row { grid-template-columns: 1fr; }
+    .field-label { padding: 12px 18px 8px; border-bottom: 1px dashed var(--border); }
+    .tipi-group { gap: 4px; }
+    .tipi-group label { min-width: 50px; font-size: 0.66rem; padding: 6px 5px; }
+    .section-header { padding: 16px 20px; }
+    .field-input { padding: 12px 18px; }
+    .step-label { font-size: 0.58rem; }
+    .step-circle { width: 28px; height: 28px; }
+    .stepbar { padding: 10px 8px; gap: 0; }
+    .btn-nav { padding: 12px 20px; font-size: 0.85rem; }
+    .accordion summary, .intro-note { padding: 14px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <h1>あなたのダイエットを最適化する問診票</h1>
+  <p>ダイエットを目的とした無料の体質分析サービス</p>
+</header>
+
+<!-- ステップバー（sticky） -->
+<div class="stepbar-outer">
+  <div class="stepbar" id="stepbar">
+    <div class="step-node active" data-step="0">
+      <div class="step-circle"><span class="step-num">1</span></div>
+      <span class="step-label">基本情報</span>
+    </div>
+    <div class="step-node" data-step="1">
+      <div class="step-circle"><span class="step-num">2</span></div>
+      <span class="step-label">生活習慣</span>
+    </div>
+    <div class="step-node" data-step="2">
+      <div class="step-circle"><span class="step-num">3</span></div>
+      <span class="step-label">体質</span>
+    </div>
+    <div class="step-node" data-step="3">
+      <div class="step-circle"><span class="step-num">4</span></div>
+      <span class="step-label">性格特性</span>
+    </div>
+    <div class="step-node" data-step="4">
+      <div class="step-circle"><span class="step-num">5</span></div>
+      <span class="step-label">ダイエットの背景</span>
+    </div>
+  </div>
+</div>
+
+<div class="main-wrap">
+<form id="dietForm" novalidate>
+
+<!-- ══════════════════════════════════════════
+     PAGE 1: 基本情報
+══════════════════════════════════════════ -->
+<div class="form-page active" id="page-0">
+
+  <!-- サービスの流れ（1ページ目のみ） -->
+  <div class="intro-card">
+    <details class="accordion">
+      <summary>無料分析サービスの流れ</summary>
+      <div class="accordion-body">
+        <div class="svc-step-list">
+          <div class="svc-step-item">
+            <span class="svc-badge">Step 1</span>
+            <div class="svc-content">
+              <strong>問診票に必要事項を記入（15分程度）</strong>
+              <span>各ページの問に対してご回答ください。</span>
+            </div>
+          </div>
+          <div class="svc-step-item">
+            <span class="svc-badge">Step 2</span>
+            <div class="svc-content">
+              <strong>回答を送信する</strong>
+              <span>最終ページの「分析を依頼」ボタンを押してください。</span>
+            </div>
+          </div>
+          <div class="svc-step-item">
+            <span class="svc-badge">Step 3</span>
+            <div class="svc-content">
+              <strong>回答データの分析・納品</strong>
+              <span>20分以内にご登録メールアドレス宛に納品します。</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </details>
+    <div class="intro-note">
+      ご入力いただいた情報は、納品資料の作成のみに利用します。<br>
+      情報の取り扱いについては<a href="https://prodiet-gjb.com/privacy-policy/" target="_blank">プライバシーポリシー</a>をご確認ください。
+    </div>
+  </div>
+
+  <div class="form-section">
+    <div class="section-header">
+      <h2>基本情報</h2>
+      <p>あなたの基本的な健康情報を把握します。</p>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">メールアドレス</span></div>
+      <div class="field-input">
+        <input type="email" name="your-email" required placeholder="hoge@example.com">
+        <span class="hint">成果物の納品先となるメールアドレスを入力してください。</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">ニックネーム</span></div>
+      <div class="field-input">
+        <input type="text" name="nickname" required minlength="4" maxlength="10" placeholder="4〜10文字で入力してください">
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">性別</span></div>
+      <div class="field-input">
+        <div class="radio-group" id="sex-group">
+          <label><input type="radio" name="sex" value="男性" required><span>男性</span></label>
+          <label><input type="radio" name="sex" value="女性"><span>女性</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">年齢</span></div>
+      <div class="field-input">
+        <input type="number" name="age" required min="10" max="100" placeholder="例: 35">
+        <span class="hint">歳</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">身長</span></div>
+      <div class="field-input">
+        <input type="number" name="height" required min="50" max="250" step="0.1" placeholder="例: 158.5">
+        <span class="hint">cm</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">現在の体重</span></div>
+      <div class="field-input">
+        <input type="number" name="weight" required min="30" max="200" step="0.1" placeholder="例: 55.0">
+        <span class="hint">kg</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">腹囲</span></div>
+      <div class="field-input">
+        <input type="number" name="waist" min="50" max="200" step="0.1" placeholder="例: 73.0">
+        <span class="hint">cm</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">体脂肪率</span></div>
+      <div class="field-input">
+        <input type="number" name="bodyfat" min="0.1" max="70" step="0.1" placeholder="例: 28.5">
+        <span class="hint">%</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">20歳頃の体重</span></div>
+      <div class="field-input">
+        <input type="number" name="TwentyWeight" min="30" max="200" step="0.1" placeholder="例: 50.0">
+        <span class="hint">kg</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">既往症・服薬</span></div>
+      <div class="field-input">
+        <div class="check-group vertical" id="medicine-group">
+          <label><input type="checkbox" name="medicine[]" value="糖尿病"><span>糖尿病</span></label>
+          <label><input type="checkbox" name="medicine[]" value="高血圧症"><span>高血圧症</span></label>
+          <label><input type="checkbox" name="medicine[]" value="脂質異常症"><span>脂質異常症</span></label>
+          <label><input type="checkbox" name="medicine[]" value="その他"><span>その他</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="cond-group" id="grp-otherMedicine">
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">その他の治療情報</span></div>
+        <div class="field-input">
+          <textarea name="otherMedicine" placeholder="治療中の病気や服薬している薬をご記入ください"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">血液検査値の入力</span></div>
+      <div class="field-input">
+        <div class="radio-group" id="blood-group">
+          <label><input type="radio" name="blood" value="入力する"><span>入力する</span></label>
+          <label><input type="radio" name="blood" value="入力しない"><span>入力しない</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="cond-group" id="grp-Diabetes">
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">HbA1c</span></div>
+        <div class="field-input"><input type="number" name="A1c" min="3" max="18" step="0.1" placeholder="例: 5.5"><span class="hint">%</span></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">血糖値</span></div>
+        <div class="field-input"><input type="number" name="BG" min="40" max="350" placeholder="例: 95"><span class="hint">mg/dL</span></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">中性脂肪</span></div>
+        <div class="field-input"><input type="number" name="TG" min="40" max="3000" placeholder="例: 120"><span class="hint">mg/dL</span></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">LDLコレステロール</span></div>
+        <div class="field-input"><input type="number" name="LDL" min="40" max="250" placeholder="例: 110"><span class="hint">mg/dL</span></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">HDLコレステロール</span></div>
+        <div class="field-input"><input type="number" name="HDL" min="20" max="150" placeholder="例: 60"><span class="hint">mg/dL</span></div>
+      </div>
+    </div>
+  </div><!-- /section -->
+
+  <div class="page-nav">
+    <div></div>
+    <span class="page-counter">1 / 5</span>
+    <button type="button" class="btn-nav btn-next" onclick="goNext()">生活習慣へ ›</button>
+  </div>
+</div><!-- /page-0 -->
+
+
+<!-- ══════════════════════════════════════════
+     PAGE 2: 生活習慣
+══════════════════════════════════════════ -->
+<div class="form-page" id="page-1">
+
+  <div class="form-section">
+    <div class="section-header">
+      <h2>生活習慣</h2>
+      <p>日々の生活スタイルをお聞きします。</p>
+    </div>
+
+    <div class="section-subheader">🏃 運動習慣</div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">平日の活動量</span></div>
+      <div class="field-input">
+        <select name="ActivityContent" required>
+          <option value="">選択してください</option>
+          <option value="座っていることが多い">座っていることが多い</option>
+          <option value="やや座っていることが多い">やや座っていることが多い</option>
+          <option value="半々">半々</option>
+          <option value="やや動き回ることが多い">やや動き回ることが多い</option>
+          <option value="動き回ることが多い">動き回ることが多い</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">休日の活動量</span></div>
+      <div class="field-input">
+        <select name="HolidayActivity" required>
+          <option value="">選択してください</option>
+          <option value="座っていることが多い">座っていることが多い</option>
+          <option value="やや座っていることが多い">やや座っていることが多い</option>
+          <option value="半々">半々</option>
+          <option value="やや動き回ることが多い">やや動き回ることが多い</option>
+          <option value="動き回ることが多い">動き回ることが多い</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">意識的に体を動かす</span></div>
+      <div class="field-input">
+        <div class="radio-group">
+          <label><input type="radio" name="MoveBody" value="はい" required><span>はい</span></label>
+          <label><input type="radio" name="MoveBody" value="いいえ"><span>いいえ</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">運動頻度</span></div>
+      <div class="field-input">
+        <select name="exercise" required id="exercise-select">
+          <option value="">選択してください</option>
+          <option value="ほとんどない">ほとんどない</option>
+          <option value="週1-2回">週1〜2回</option>
+          <option value="週3-4回">週3〜4回</option>
+          <option value="ほぼ毎日">ほぼ毎日</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="cond-group" id="grp-ExerciseHabits">
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">運動の内容</span></div>
+        <div class="field-input">
+          <textarea name="ExerciseHabits" placeholder="どのような運動をしているか記入してください"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-subheader">🍽️ 食事習慣</div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">食事の準備</span></div>
+      <div class="field-input">
+        <div class="radio-group vertical">
+          <label><input type="radio" name="MealPreparation" value="自分で作ることが多い" required><span>自分で作ることが多い</span></label>
+          <label><input type="radio" name="MealPreparation" value="用意してもらうことが多い"><span>用意してもらうことが多い</span></label>
+          <label><input type="radio" name="MealPreparation" value="外食や購入で済ますことが多い"><span>外食や購入で済ますことが多い</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">食習慣で当てはまるもの</span></div>
+      <div class="field-input">
+        <span class="hint" style="margin-bottom:8px">該当するものをすべて選択してください</span>
+        <div class="check-group vertical">
+          <label><input type="checkbox" name="DietaryRules[]" value="1日3食未満"><span>1日3食未満</span></label>
+          <label><input type="checkbox" name="DietaryRules[]" value="食事時間が不規則"><span>食事時間が不規則</span></label>
+          <label><input type="checkbox" name="DietaryRules[]" value="夕食が遅い"><span>夕食が遅い</span></label>
+          <label><input type="checkbox" name="DietaryRules[]" value="就寝1時間以内に食べる習慣がある"><span>就寝1時間以内に食べる習慣がある</span></label>
+          <label><input type="checkbox" name="DietaryRules[]" value="食べるスピードが早い"><span>食べるスピードが早い</span></label>
+          <label><input type="checkbox" name="DietaryRules[]" value="お腹が減ったら間食する"><span>お腹が減ったら間食する</span></label>
+          <label><input type="checkbox" name="DietaryRules[]" value="上記に当てはまるものはない"><span>上記に当てはまるものはない</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">甘いものが好きだ</span></div>
+      <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_1" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_1" value="いいえ"><span>いいえ</span></label></div></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">こってりした食事が好きだ</span></div>
+      <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_2" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_2" value="いいえ"><span>いいえ</span></label><label><input type="radio" name="TasteTrends_2" value="どちらでもない"><span>どちらでもない</span></label></div></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">味が濃いものが好きだ</span></div>
+      <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_3" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_3" value="いいえ"><span>いいえ</span></label></div></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">お腹いっぱい食べることが多い</span></div>
+      <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_4" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_4" value="いいえ"><span>いいえ</span></label></div></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">スナック菓子が好きだ</span></div>
+      <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_5" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_5" value="いいえ"><span>いいえ</span></label></div></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">焼肉のたれと塩、どちら派ですか</span></div>
+      <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_6" value="タレ" required><span>タレ</span></label><label><input type="radio" name="TasteTrends_6" value="塩"><span>塩</span></label><label><input type="radio" name="TasteTrends_6" value="どちらでもない"><span>どちらでもない</span></label></div></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">揚げ物を週3回以上食べる</span></div>
+      <div class="field-input"><div class="radio-group"><label><input type="radio" name="TasteTrends_7" value="はい" required><span>はい</span></label><label><input type="radio" name="TasteTrends_7" value="いいえ"><span>いいえ</span></label></div></div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">1日の野菜摂取量</span></div>
+      <div class="field-input">
+        <select name="vegetables" required>
+          <option value="">選択してください</option>
+          <option value="片手のひら半分未満">片手のひら半分未満</option>
+          <option value="片手のひら1杯分">片手のひら1杯分</option>
+          <option value="両手のひら1杯分">両手のひら1杯分</option>
+          <option value="両手のひら1杯以上">両手のひら1杯以上</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">よく飲む飲み物</span></div>
+      <div class="field-input">
+        <span class="hint" style="margin-bottom:8px">該当するものをすべて選択してください</span>
+        <div class="check-group" id="customarydrink-group">
+          <label><input type="checkbox" name="CustomaryDrink[]" value="水"><span>水</span></label>
+          <label><input type="checkbox" name="CustomaryDrink[]" value="お茶"><span>お茶</span></label>
+          <label><input type="checkbox" name="CustomaryDrink[]" value="コーヒー"><span>コーヒー</span></label>
+          <label><input type="checkbox" name="CustomaryDrink[]" value="加糖飲料"><span>加糖飲料</span></label>
+          <label><input type="checkbox" name="CustomaryDrink[]" value="野菜ジュース"><span>野菜ジュース</span></label>
+          <label><input type="checkbox" name="CustomaryDrink[]" value="酒類（アルコール飲料）"><span>酒類</span></label>
+          <label><input type="checkbox" name="CustomaryDrink[]" value="その他"><span>その他</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="cond-group" id="grp-othersdrink">
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">その他の飲み物</span></div>
+        <div class="field-input"><input type="text" name="otherdrinks" placeholder="例: カクテル、発泡酒など"></div>
+      </div>
+    </div>
+
+    <div class="section-subheader">🍶 飲酒習慣</div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">飲酒頻度</span></div>
+      <div class="field-input">
+        <div class="radio-group vertical">
+          <label><input type="radio" name="DrinkingFrequency" value="毎日" required><span>毎日</span></label>
+          <label><input type="radio" name="DrinkingFrequency" value="週6回"><span>週6回</span></label>
+          <label><input type="radio" name="DrinkingFrequency" value="週5回"><span>週5回</span></label>
+          <label><input type="radio" name="DrinkingFrequency" value="週4回"><span>週4回</span></label>
+          <label><input type="radio" name="DrinkingFrequency" value="週3回"><span>週3回</span></label>
+          <label><input type="radio" name="DrinkingFrequency" value="週2回"><span>週2回</span></label>
+          <label><input type="radio" name="DrinkingFrequency" value="週1回"><span>週1回</span></label>
+          <label><input type="radio" name="DrinkingFrequency" value="週1回未満"><span>週1回未満</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">飲酒のタイミング</span></div>
+      <div class="field-input">
+        <span class="hint" style="margin-bottom:8px">該当するものをすべて選択してください</span>
+        <div class="check-group vertical">
+          <label><input type="checkbox" name="drinkingtiming[]" value="夕食前に飲む"><span>夕食前に飲む</span></label>
+          <label><input type="checkbox" name="drinkingtiming[]" value="夕食中に飲む"><span>夕食中に飲む</span></label>
+          <label><input type="checkbox" name="drinkingtiming[]" value="夕食後に飲む"><span>夕食後に飲む</span></label>
+          <label><input type="checkbox" name="drinkingtiming[]" value="就寝2時間以内に飲む"><span>就寝2時間以内に飲む</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">飲酒量（1回あたり）</span></div>
+      <div class="field-input">
+        <div class="drink-grid">
+          <div class="drink-item"><label>ビール（ml）</label><input type="number" name="beer" min="0" placeholder="例: 350"></div>
+          <div class="drink-item"><label>焼酎 原液（ml）</label><input type="number" name="shochu" min="0" placeholder="例: 60"></div>
+          <div class="drink-item"><label>ワイン（ml）</label><input type="number" name="wine" min="0" placeholder="例: 120"></div>
+          <div class="drink-item"><label>ウィスキー（ml）</label><input type="number" name="whiskey" min="0" placeholder="例: 45"></div>
+          <div class="drink-item"><label>日本酒（ml）</label><input type="number" name="JapaneseSake" min="0" placeholder="例: 180"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-subheader">🌙 睡眠</div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">平均睡眠時間</span></div>
+      <div class="field-input">
+        <input type="number" name="sleeping" required min="1" max="15" step="0.5" placeholder="例: 6.5">
+        <span class="hint">時間（6時間半の場合は「6.5」）</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">睡眠の傾向や気分</span></div>
+      <div class="field-input">
+        <p style="font-size:0.85rem;margin-bottom:8px;color:var(--deep);font-weight:500">睡眠の質に満足している</p>
+        <div class="radio-group" id="sleep01-group">
+          <label><input type="radio" name="SleepTendency_01" value="はい" required><span>はい</span></label>
+          <label><input type="radio" name="SleepTendency_01" value="いいえ"><span>いいえ</span></label>
+        </div>
+
+        <div class="cond-group" id="grp-insomnia" style="padding:12px 0 4px">
+          <div style="display:flex;flex-direction:column;gap:14px;padding:0 4px">
+            <div><p style="font-size:0.83rem;color:var(--text);margin-bottom:6px">なかなか眠れない</p><div class="radio-group"><label><input type="radio" name="SleepTendency_02" value="はい"><span>はい</span></label><label><input type="radio" name="SleepTendency_02" value="いいえ"><span>いいえ</span></label></div></div>
+            <div><p style="font-size:0.83rem;color:var(--text);margin-bottom:6px">夜、ふと目が覚める</p><div class="radio-group"><label><input type="radio" name="SleepTendency_03" value="はい"><span>はい</span></label><label><input type="radio" name="SleepTendency_03" value="いいえ"><span>いいえ</span></label></div></div>
+            <div><p style="font-size:0.83rem;color:var(--text);margin-bottom:6px">夜、トイレで目が覚める</p><div class="radio-group"><label><input type="radio" name="SleepTendency_04" value="はい"><span>はい</span></label><label><input type="radio" name="SleepTendency_04" value="いいえ"><span>いいえ</span></label></div></div>
+            <div><p style="font-size:0.83rem;color:var(--text);margin-bottom:6px">朝方、予定より早く目が覚める</p><div class="radio-group"><label><input type="radio" name="SleepTendency_05" value="はい"><span>はい</span></label><label><input type="radio" name="SleepTendency_05" value="いいえ"><span>いいえ</span></label></div></div>
+            <div><p style="font-size:0.83rem;color:var(--text);margin-bottom:6px">日中に眠くなることが多い</p><div class="radio-group"><label><input type="radio" name="SleepTendency_06" value="はい"><span>はい</span></label><label><input type="radio" name="SleepTendency_06" value="いいえ"><span>いいえ</span></label></div></div>
+            <div><p style="font-size:0.83rem;color:var(--text);margin-bottom:6px">いびきをよくかく</p><div class="radio-group"><label><input type="radio" name="SleepTendency_07" value="はい"><span>はい</span></label><label><input type="radio" name="SleepTendency_07" value="いいえ"><span>いいえ</span></label></div></div>
+            <div><p style="font-size:0.83rem;color:var(--text);margin-bottom:6px">夢をよく見る</p><div class="radio-group"><label><input type="radio" name="SleepTendency_08" value="はい"><span>はい</span></label><label><input type="radio" name="SleepTendency_08" value="いいえ"><span>いいえ</span></label></div></div>
+            <div><p style="font-size:0.83rem;color:var(--text);margin-bottom:6px">睡眠時無呼吸症候群を指摘されている</p><div class="radio-group"><label><input type="radio" name="SleepTendency_09" value="はい"><span>はい</span></label><label><input type="radio" name="SleepTendency_09" value="いいえ"><span>いいえ</span></label></div></div>
+          </div>
+        </div>
+
+        <div style="height:14px"></div>
+        <p style="font-size:0.85rem;margin-bottom:8px;color:var(--deep);font-weight:500">不安や憂鬱感がある</p>
+        <div class="radio-group"><label><input type="radio" name="feeling_01" value="はい" required><span>はい</span></label><label><input type="radio" name="feeling_01" value="いいえ"><span>いいえ</span></label></div>
+
+        <div style="height:14px"></div>
+        <p style="font-size:0.85rem;margin-bottom:8px;color:var(--deep);font-weight:500">喉にものが詰まった感じがする</p>
+        <div class="radio-group"><label><input type="radio" name="feeling_02" value="はい" required><span>はい</span></label><label><input type="radio" name="feeling_02" value="いいえ"><span>いいえ</span></label></div>
+
+        <div style="height:14px"></div>
+        <p style="font-size:0.85rem;margin-bottom:8px;color:var(--deep);font-weight:500">イライラして怒りっぽい</p>
+        <div class="radio-group"><label><input type="radio" name="feeling_03" value="はい" required><span>はい</span></label><label><input type="radio" name="feeling_03" value="いいえ"><span>いいえ</span></label></div>
+
+        <div style="height:14px"></div>
+        <p style="font-size:0.85rem;margin-bottom:8px;color:var(--deep);font-weight:500">よくため息をつく</p>
+        <div class="radio-group"><label><input type="radio" name="feeling_04" value="はい" required><span>はい</span></label><label><input type="radio" name="feeling_04" value="いいえ"><span>いいえ</span></label></div>
+      </div>
+    </div>
+  </div><!-- /section -->
+
+  <div class="page-nav">
+    <button type="button" class="btn-nav btn-prev" onclick="goPrev()">‹ 基本情報へ</button>
+    <span class="page-counter">2 / 5</span>
+    <button type="button" class="btn-nav btn-next" onclick="goNext()">体質へ ›</button>
+  </div>
+</div><!-- /page-1 -->
+
+
+<!-- ══════════════════════════════════════════
+     PAGE 3: 体質
+══════════════════════════════════════════ -->
+<div class="form-page" id="page-2">
+  <div class="form-section">
+    <div class="section-header">
+      <h2>体質</h2>
+      <p>体質や健康状態を把握します。各項目に「はい」「いいえ」でお答えください。</p>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">体質チェック</span></div>
+      <div class="field-input" style="gap:16px">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">胃腸が弱い（下痢、胸やけ、胃痛など）</p><div class="radio-group"><label><input type="radio" name="constitution_01" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_01" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">食後に眠くなることが多い</p><div class="radio-group"><label><input type="radio" name="constitution_02" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_02" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">揚げ物を食べて胸やけしない</p><div class="radio-group"><label><input type="radio" name="constitution_03" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_03" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">冷え性である</p><div class="radio-group"><label><input type="radio" name="constitution_04" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_04" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">ニキビができやすい</p><div class="radio-group"><label><input type="radio" name="constitution_05" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_05" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">1日食べなくても平気</p><div class="radio-group"><label><input type="radio" name="constitution_06" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_06" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">汗をかきやすい・風邪をひきやすい</p><div class="radio-group"><label><input type="radio" name="constitution_07" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_07" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">食が細く胃もたれしやすい</p><div class="radio-group"><label><input type="radio" name="constitution_08" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_08" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">めまいや立ちくらみがある</p><div class="radio-group"><label><input type="radio" name="constitution_09" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_09" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">疲れやすくやる気が出ない・体がだるい</p><div class="radio-group"><label><input type="radio" name="constitution_10" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_10" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">目や肌が乾燥する・爪がもろい</p><div class="radio-group"><label><input type="radio" name="constitution_11" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_11" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">胃やお腹が張る・げっぷやガスが出やすい</p><div class="radio-group"><label><input type="radio" name="constitution_12" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_12" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">足腰がだるく痛む</p><div class="radio-group"><label><input type="radio" name="constitution_13" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_13" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">手足や腰に冷えがある</p><div class="radio-group"><label><input type="radio" name="constitution_14" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_14" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">基礎代謝が低い・低体温・低血圧</p><div class="radio-group"><label><input type="radio" name="constitution_15" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_15" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">トイレが近い</p><div class="radio-group"><label><input type="radio" name="constitution_16" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_16" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">寝汗をかきやすい</p><div class="radio-group"><label><input type="radio" name="constitution_17" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_17" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">目・鼻・口の粘膜が乾きやすい</p><div class="radio-group"><label><input type="radio" name="constitution_18" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_18" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">肌がカサカサする</p><div class="radio-group"><label><input type="radio" name="constitution_19" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_19" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">のぼせ・ほてりがある</p><div class="radio-group"><label><input type="radio" name="constitution_20" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_20" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">便秘体質だ</p><div class="radio-group"><label><input type="radio" name="constitution_21" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_21" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">便が硬く出にくい</p><div class="radio-group"><label><input type="radio" name="constitution_22" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_22" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">肩こり・腰痛・頭痛がある</p><div class="radio-group"><label><input type="radio" name="constitution_23" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_23" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">動悸や不整脈がある</p><div class="radio-group"><label><input type="radio" name="constitution_24" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_24" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">アザができやすい</p><div class="radio-group"><label><input type="radio" name="constitution_25" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_25" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">シミが多い・唇の色が暗い</p><div class="radio-group"><label><input type="radio" name="constitution_26" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_26" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">目の下にクマがある</p><div class="radio-group"><label><input type="radio" name="constitution_27" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_27" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">むくみやすい</p><div class="radio-group"><label><input type="radio" name="constitution_28" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_28" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">水分をよく飲む・口が渇く</p><div class="radio-group"><label><input type="radio" name="constitution_29" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_29" value="いいえ"><span>いいえ</span></label></div></div>
+          <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">体が重く、動くのがおっくうだ</p><div class="radio-group"><label><input type="radio" name="constitution_30" value="はい" required><span>はい</span></label><label><input type="radio" name="constitution_30" value="いいえ"><span>いいえ</span></label></div></div>
+        </div>
+
+        <!-- 女性専用 -->
+        <div class="cond-group" id="grp-woman" style="margin-top:8px">
+          <div style="padding:12px 16px 4px">
+            <p style="font-size:0.85rem;font-weight:700;color:var(--mauve);margin-bottom:12px">— 女性の方への追加質問 —</p>
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">月経周期が不規則だ</p><div class="radio-group"><label><input type="radio" name="woman_31" value="はい"><span>はい</span></label><label><input type="radio" name="woman_31" value="いいえ"><span>いいえ</span></label></div></div>
+              <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">月経前後に体調が大きく変わる</p><div class="radio-group"><label><input type="radio" name="woman_32" value="はい"><span>はい</span></label><label><input type="radio" name="woman_32" value="いいえ"><span>いいえ</span></label></div></div>
+              <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">月経痛がひどい</p><div class="radio-group"><label><input type="radio" name="woman_33" value="はい"><span>はい</span></label><label><input type="radio" name="woman_33" value="いいえ"><span>いいえ</span></label></div></div>
+              <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">月経の出血量が多い（または少ない）</p><div class="radio-group"><label><input type="radio" name="woman_34" value="はい"><span>はい</span></label><label><input type="radio" name="woman_34" value="いいえ"><span>いいえ</span></label></div></div>
+              <div><p style="font-size:0.83rem;font-weight:500;color:var(--deep);margin-bottom:6px">更年期症状（ほてり・のぼせ・イライラなど）がある</p><div class="radio-group"><label><input type="radio" name="woman_35" value="はい"><span>はい</span></label><label><input type="radio" name="woman_35" value="いいえ"><span>いいえ</span></label></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /section -->
+
+  <div class="page-nav">
+    <button type="button" class="btn-nav btn-prev" onclick="goPrev()">‹ 生活習慣へ</button>
+    <span class="page-counter">3 / 5</span>
+    <button type="button" class="btn-nav btn-next" onclick="goNext()">性格特性へ ›</button>
+  </div>
+</div><!-- /page-2 -->
+
+
+<!-- ══════════════════════════════════════════
+     PAGE 4: 性格特性（TIPI-J）
+══════════════════════════════════════════ -->
+<div class="form-page" id="page-3">
+  <div class="form-section">
+    <div class="section-header">
+      <h2>性格特性</h2>
+      <p>以下の各項目が、あなた自身にどの程度当てはまるかをお答えください。</p>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">活発で、外向的だ</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_01" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_01" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_01" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_01" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_01" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_01" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_01" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">批判的で、よく喧嘩をする</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_02" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_02" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_02" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_02" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_02" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_02" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_02" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">しっかりしていて、自分に厳しい</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_03" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_03" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_03" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_03" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_03" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_03" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_03" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">心配性でうろたえやすい</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_04" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_04" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_04" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_04" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_04" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_04" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_04" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">新しいことが好きで変わった考えを持つ</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_05" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_05" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_05" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_05" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_05" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_05" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_05" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">ひかえめでおとなしい</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_06" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_06" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_06" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_06" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_06" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_06" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_06" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">人に気を使う優しい人間だ</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_07" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_07" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_07" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_07" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_07" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_07" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_07" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">だらしない、うっかりしている</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_08" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_08" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_08" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_08" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_08" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_08" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_08" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">冷静で気分が安定している</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_09" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_09" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_09" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_09" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_09" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_09" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_09" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">発想力に欠けた平凡な人間だ</span></div>
+      <div class="field-input"><div class="tipi-group"><label><input type="radio" name="TIPI-J_10" value="全く違う" required><span>全く違う</span></label><label><input type="radio" name="TIPI-J_10" value="おおよそ違う"><span>おおよそ違う</span></label><label><input type="radio" name="TIPI-J_10" value="少し違う"><span>少し違う</span></label><label><input type="radio" name="TIPI-J_10" value="どちらでもない"><span>どちらでもない</span></label><label><input type="radio" name="TIPI-J_10" value="少しそう思う"><span>少しそう思う</span></label><label><input type="radio" name="TIPI-J_10" value="まあまあそう思う"><span>まあまあそう思う</span></label><label><input type="radio" name="TIPI-J_10" value="強くそう思う"><span>強くそう思う</span></label></div></div>
+    </div>
+  </div><!-- /section -->
+
+  <div class="page-nav">
+    <button type="button" class="btn-nav btn-prev" onclick="goPrev()">‹ 体質へ</button>
+    <span class="page-counter">4 / 5</span>
+    <button type="button" class="btn-nav btn-next" onclick="goNext()">ダイエットの背景へ ›</button>
+  </div>
+</div><!-- /page-3 -->
+
+
+<!-- ══════════════════════════════════════════
+     PAGE 5: ダイエットの背景
+══════════════════════════════════════════ -->
+<div class="form-page" id="page-4">
+  <div class="form-section">
+    <div class="section-header">
+      <h2>ダイエットの背景</h2>
+      <p>ダイエットの経験や目標をお聞きします。</p>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">ダイエット経験</span></div>
+      <div class="field-input">
+        <div class="radio-group" id="dietexp-group">
+          <label><input type="radio" name="DietExperience" value="ない" required><span>ない</span></label>
+          <label><input type="radio" name="DietExperience" value="少しある"><span>少しある</span></label>
+          <label><input type="radio" name="DietExperience" value="ある"><span>ある</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="cond-group" id="grp-pastdiet">
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">過去のダイエット方法</span></div>
+        <div class="field-input">
+          <span class="hint" style="margin-bottom:8px">該当するものをすべて選択してください</span>
+          <div class="check-group vertical">
+            <label><input type="checkbox" name="pastdiet[]" value="断食"><span>断食</span></label>
+            <label><input type="checkbox" name="pastdiet[]" value="食事制限（カロリー制限）"><span>食事制限（カロリー制限）</span></label>
+            <label><input type="checkbox" name="pastdiet[]" value="食事制限（糖質制限）"><span>食事制限（糖質制限）</span></label>
+            <label><input type="checkbox" name="pastdiet[]" value="食事制限（脂質制限）"><span>食事制限（脂質制限）</span></label>
+            <label><input type="checkbox" name="pastdiet[]" value="アルコール制限"><span>アルコール制限</span></label>
+            <label><input type="checkbox" name="pastdiet[]" value="運動"><span>運動</span></label>
+            <label><input type="checkbox" name="pastdiet[]" value="その他"><span>その他</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">その他のダイエット</span></div>
+        <div class="field-input"><textarea name="OtherDiets" placeholder="その他のダイエット内容を入力してください"></textarea></div>
+      </div>
+      <div class="field-row">
+        <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">ダイエットの効果</span></div>
+        <div class="field-input">
+          <select name="EffectsOfDiet">
+            <option value="">— 以下から選択してください —</option>
+            <option value="減量効果を感じられた">減量効果を感じられた</option>
+            <option value="減量できたがリバウンドした">減量できたがリバウンドした</option>
+            <option value="減量効果は感じられなかった">減量効果は感じられなかった</option>
+            <option value="大変だったので続かなかった">大変だったので続かなかった</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">最も気になる脂肪部位</span></div>
+      <div class="field-input">
+        <div class="radio-group">
+          <label><input type="radio" name="fatArea" value="お腹" required><span>お腹</span></label>
+          <label><input type="radio" name="fatArea" value="お尻"><span>お尻</span></label>
+          <label><input type="radio" name="fatArea" value="顔"><span>顔</span></label>
+          <label><input type="radio" name="fatArea" value="首周り"><span>首周り</span></label>
+          <label><input type="radio" name="fatArea" value="腕・脚"><span>腕・脚</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">最大体重</span></div>
+      <div class="field-input">
+        <input type="number" name="maxWeight" required min="30" max="200" step="0.1" placeholder="これまでの最大体重">
+        <span class="hint">kg</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-opt">任意</span><span class="label-text">最大体重時の年齢</span></div>
+      <div class="field-input">
+        <input type="number" name="maxAge" min="9" max="65" placeholder="おおよその年齢">
+        <span class="hint">歳</span>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">目標体重</span></div>
+      <div class="field-input">
+        <input type="number" name="idealWeight" required min="30" max="110" step="0.1" placeholder="理想の体重">
+        <span class="hint">kg</span>
+      </div>
+    </div>
+  </div><!-- /section -->
+
+  <div class="page-nav">
+    <button type="button" class="btn-nav btn-prev" onclick="goPrev()">‹ 性格特性へ</button>
+    <span class="page-counter">5 / 5</span>
+    <button type="button" class="btn-submit" id="submitBtn" onclick="submitForm()">✨ 分析を依頼</button>
+  </div>
+</div><!-- /page-4 -->
+
+</form>
+</div><!-- /.main-wrap -->
+
+<footer class="site-footer">
+  <p>Copyright © 2023 分析ダイエットの専門家｜けー All Rights Reserved.</p>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── Google Apps Script WebApp URL ──
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbzRG29kRYn07K1U0G-5c_x5HRLVP2yRFXHzHjS2iWG-Qh-cpbSrpMr-uq1zBk71zsceEw/exec';
+
+// ════════════════════════════════
+// ページ管理
+// ════════════════════════════════
+const TOTAL_PAGES = 5;
+let currentPage = 0;
+
+function updateStepBar(page) {
+  document.querySelectorAll('.step-node').forEach((node, i) => {
+    node.classList.remove('active', 'done');
+    if (i < page)  node.classList.add('done');
+    if (i === page) node.classList.add('active');
+  });
+}
+
+function goNext() {
+  // 現在ページの必須項目チェック
+  const page = document.getElementById('page-' + currentPage);
+  const inputs = page.querySelectorAll('input[required], select[required], textarea[required]');
+  let valid = true;
+  for (const inp of inputs) {
+    // radio: 同nameグループで1つでも選ばれていればOK
+    if (inp.type === 'radio') {
+      const group = page.querySelectorAll('input[name="' + inp.name + '"]');
+      const checked = [...group].some(r => r.checked);
+      if (!checked) {
+        inp.reportValidity();
+        valid = false;
+        break;
+      }
+    } else {
+      if (!inp.checkValidity()) {
+        inp.reportValidity();
+        valid = false;
+        break;
+      }
+    }
+  }
+  if (!valid) return;
+
+  if (currentPage < TOTAL_PAGES - 1) {
+    document.getElementById('page-' + currentPage).classList.remove('active');
+    currentPage++;
+    document.getElementById('page-' + currentPage).classList.add('active');
+    updateStepBar(currentPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+function goPrev() {
+  if (currentPage > 0) {
+    document.getElementById('page-' + currentPage).classList.remove('active');
+    currentPage--;
+    document.getElementById('page-' + currentPage).classList.add('active');
+    updateStepBar(currentPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// ════════════════════════════════
+// 条件分岐ロジック
+// ════════════════════════════════
+function updateConditionalGroups() {
+  const blood = document.querySelector('input[name="blood"]:checked');
+  toggleGroup('grp-Diabetes', blood && blood.value === '入力する');
+
+  const medicines = [...document.querySelectorAll('input[name="medicine[]"]:checked')];
+  toggleGroup('grp-otherMedicine', medicines.some(m => m.value === 'その他'));
+
+  const sex = document.querySelector('input[name="sex"]:checked');
+  toggleGroup('grp-woman', sex && sex.value === '女性');
+
+  const drinks = [...document.querySelectorAll('input[name="CustomaryDrink[]"]:checked')];
+  toggleGroup('grp-othersdrink', drinks.some(d => d.value === 'その他'));
+
+  const exercise = document.getElementById('exercise-select').value;
+  toggleGroup('grp-ExerciseHabits', exercise && exercise !== 'ほとんどない');
+
+  const dietExp = document.querySelector('input[name="DietExperience"]:checked');
+  toggleGroup('grp-pastdiet', dietExp && (dietExp.value === 'ある' || dietExp.value === '少しある'));
+
+  const sleep01 = document.querySelector('input[name="SleepTendency_01"]:checked');
+  toggleGroup('grp-insomnia', sleep01 && sleep01.value === 'いいえ');
+}
+
+function toggleGroup(id, show) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.toggle('visible', !!show);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('dietForm').addEventListener('change', updateConditionalGroups);
+  updateConditionalGroups();
+  updateStepBar(0);
+});
+
+// ════════════════════════════════
+// フォーム送信
+// ════════════════════════════════
+function showToast(msg, duration = 4000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+async function submitForm() {
+  const form = document.getElementById('dietForm');
+  const btn  = document.getElementById('submitBtn');
+
+  // 最終ページのバリデーション
+  const page = document.getElementById('page-' + currentPage);
+  const inputs = page.querySelectorAll('input[required], select[required], textarea[required]');
+  for (const inp of inputs) {
+    if (inp.type === 'radio') {
+      const group = page.querySelectorAll('input[name="' + inp.name + '"]');
+      if (![...group].some(r => r.checked)) { inp.reportValidity(); return; }
+    } else {
+      if (!inp.checkValidity()) { inp.reportValidity(); return; }
+    }
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = '送信中…';
+
+  const data = collectFormData(form);
+
+  try {
+    await fetch(GAS_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    showToast('✅ 送信が完了しました！分析結果をお待ちください。', 6000);
+    form.reset();
+    updateConditionalGroups();
+    // page 0 に戻す
+    document.getElementById('page-' + currentPage).classList.remove('active');
+    currentPage = 0;
+    document.getElementById('page-0').classList.add('active');
+    updateStepBar(0);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } catch (err) {
+    console.error(err);
+    showToast('❌ 送信に失敗しました。時間をおいて再度お試しください。', 5000);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✨ 分析を依頼';
+  }
+}
+
+function collectFormData(form) {
+  const data = {};
+  const fd = new FormData(form);
+  for (const [key, value] of fd.entries()) {
+    if (key.endsWith('[]')) {
+      const k = key.slice(0, -2);
+      if (!data[k]) data[k] = [];
+      data[k].push(value);
+    } else {
+      data[key] = value;
+    }
+  }
+  for (const key in data) {
+    if (Array.isArray(data[key])) data[key] = data[key].join('、');
+  }
+  data['送信日時'] = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
+  return data;
+}
+</script>
+</body>
+</html>
