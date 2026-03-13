@@ -360,7 +360,7 @@
   .cond-group .field-label { background: rgba(255,255,255,0.5); }
 
   /* ─── DRINK GRID ─── */
-  .drink-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
+  .drink-grid { display: flex; flex-direction: column; gap: 10px; max-width: 320px; }
   .drink-item label { font-size: 0.8rem; color: var(--subtext); margin-bottom: 4px; display: block; }
 
   /* ─── NAV BUTTONS ─── */
@@ -908,6 +908,19 @@
       </div>
     </div>
 
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">1日の歩数（目安）</span></div>
+      <div class="field-input">
+        <div class="radio-group vertical">
+          <label><input type="radio" name="DailySteps" value="4000歩未満" required><span>4,000歩未満</span></label>
+          <label><input type="radio" name="DailySteps" value="4000〜6000歩"><span>4,000〜6,000歩</span></label>
+          <label><input type="radio" name="DailySteps" value="6000〜8000歩"><span>6,000〜8,000歩</span></label>
+          <label><input type="radio" name="DailySteps" value="8000〜10000歩"><span>8,000〜10,000歩</span></label>
+          <label><input type="radio" name="DailySteps" value="10000歩以上"><span>10,000歩以上</span></label>
+        </div>
+      </div>
+    </div>
+
     <div class="section-subheader">🍽️ 食事習慣</div>
     <div class="period-note">以下の質問は、<strong>ここ1ヶ月の平均的な食事・生活</strong>についてお答えください。</div>
 
@@ -982,6 +995,30 @@
           <option value="両手のひら1杯分">両手のひら1杯分</option>
           <option value="両手のひら1杯以上">両手のひら1杯以上</option>
         </select>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">1日の水分摂取量</span></div>
+      <div class="field-input">
+        <span class="hint" style="margin-bottom:10px">コーヒーや緑茶（カフェイン入り）ではなく、<strong>水や麦茶などカフェインを含まないお茶</strong>を1日どれくらい飲むか、お答えください。</span>
+        <div class="radio-group vertical">
+          <label><input type="radio" name="WaterIntake" value="500ml未満" required><span>500ml 未満</span></label>
+          <label><input type="radio" name="WaterIntake" value="500〜1000ml"><span>500〜1,000ml</span></label>
+          <label><input type="radio" name="WaterIntake" value="1000〜1500ml"><span>1,000〜1,500ml</span></label>
+          <label><input type="radio" name="WaterIntake" value="1500ml以上"><span>1,500ml 以上</span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field-label"><span class="badge badge-req">必須</span><span class="label-text">食べる速さ</span></div>
+      <div class="field-input">
+        <div class="radio-group vertical">
+          <label><input type="radio" name="EatingSpeed" value="よく噛む・ゆっくり食べる" required><span>よく噛む・ゆっくり食べる</span></label>
+          <label><input type="radio" name="EatingSpeed" value="普通"><span>普通</span></label>
+          <label><input type="radio" name="EatingSpeed" value="早食い傾向・あまり噛まない"><span>早食い傾向・あまり噛まない</span></label>
+        </div>
       </div>
     </div>
 
@@ -1458,6 +1495,7 @@
 <script>
 // ── Google Apps Script WebApp URL ──
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbz_oyyU3HPhRT28130DqlmOzYa2lvtZto6hzbEgl3ahL7eHFfo4ngC0XVbbe5iGIrw4IQ/exec';
+  
 
 // ════════════════════════════════
 // プライバシーポリシー モーダル
