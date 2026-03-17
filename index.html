@@ -791,7 +791,7 @@
 
     <div class="field-row privacy-note-row">
       <div class="field-label"></div>
-      <div class="field-input"><span class="hint privacy-hint">🔒 ご入力いただいた情報は、分析およびアドバイスの生成のみに使用し、第三者に公開されることはありません。</span></div>
+      <div class="field-input"><span class="hint privacy-hint">ご入力いただいた情報は、分析およびアドバイスの生成のみに使用し、第三者に公開されることはありません。</span></div>
     </div>
 
     <div class="cond-group" id="grp-otherMedicine">
@@ -1535,28 +1535,45 @@ function updateStepBar(page) {
 
 function goNext() {
   // 現在ページの必須項目チェック
+  // ※ display:none の非表示グループ（cond-group 等）内の required は検証対象外とする
   const page = document.getElementById('page-' + currentPage);
-  const inputs = page.querySelectorAll('input[required], select[required], textarea[required]');
-  let valid = true;
-  for (const inp of inputs) {
-    // radio: 同nameグループで1つでも選ばれていればOK
+  const allInputs = page.querySelectorAll('input[required], select[required], textarea[required]');
+
+  // 実際に画面に表示されている要素のみに絞る
+  const visibleInputs = [...allInputs].filter(el => {
+    // 自分自身または祖先に display:none があれば非表示と判定
+    return el.offsetParent !== null;
+  });
+
+  // ラジオは同名グループをまとめて1回だけ検証（重複チェック防止）
+  const checkedRadioNames = new Set();
+  let firstInvalid = null;
+
+  for (const inp of visibleInputs) {
     if (inp.type === 'radio') {
-      const group = page.querySelectorAll('input[name="' + inp.name + '"]');
-      const checked = [...group].some(r => r.checked);
-      if (!checked) {
-        inp.reportValidity();
-        valid = false;
+      if (checkedRadioNames.has(inp.name)) continue; // すでに検証済み
+      checkedRadioNames.add(inp.name);
+      // 同じページ内の同名ラジオのうち表示中のもので1つでもチェックされていればOK
+      const group = [...page.querySelectorAll('input[name="' + inp.name + '"]')]
+        .filter(r => r.offsetParent !== null);
+      if (!group.some(r => r.checked)) {
+        firstInvalid = inp;
         break;
       }
     } else {
       if (!inp.checkValidity()) {
-        inp.reportValidity();
-        valid = false;
+        firstInvalid = inp;
         break;
       }
     }
   }
-  if (!valid) return;
+
+  if (firstInvalid) {
+    // 未入力の項目までスクロールしてバリデーションメッセージを表示
+    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => firstInvalid.reportValidity(), 300);
+    return;
+  }
 
   if (currentPage < TOTAL_PAGES - 1) {
     document.getElementById('page-' + currentPage).classList.remove('active');
@@ -1638,15 +1655,28 @@ async function submitForm() {
     return;
   }
 
-  // 最終ページのバリデーション
+  // 最終ページのバリデーション（非表示の required は除外）
   const page = document.getElementById('page-' + currentPage);
-  const inputs = page.querySelectorAll('input[required], select[required], textarea[required]');
-  for (const inp of inputs) {
+  const allInputs = page.querySelectorAll('input[required], select[required], textarea[required]');
+  const visibleInputs = [...allInputs].filter(el => el.offsetParent !== null);
+  const checkedRadioNames = new Set();
+  for (const inp of visibleInputs) {
     if (inp.type === 'radio') {
-      const group = page.querySelectorAll('input[name="' + inp.name + '"]');
-      if (![...group].some(r => r.checked)) { inp.reportValidity(); return; }
+      if (checkedRadioNames.has(inp.name)) continue;
+      checkedRadioNames.add(inp.name);
+      const group = [...page.querySelectorAll('input[name="' + inp.name + '"]')]
+        .filter(r => r.offsetParent !== null);
+      if (!group.some(r => r.checked)) {
+        inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => inp.reportValidity(), 300);
+        return;
+      }
     } else {
-      if (!inp.checkValidity()) { inp.reportValidity(); return; }
+      if (!inp.checkValidity()) {
+        inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        setTimeout(() => inp.reportValidity(), 300);
+        return;
+      }
     }
   }
 
