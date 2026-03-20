@@ -1691,21 +1691,13 @@ async function submitForm() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-    showToast('✅ 送信が完了しました！分析結果をお待ちください。', 6000);
-    form.reset();
-    updateConditionalGroups();
-    // page 0 に戻す
-    document.getElementById('page-' + currentPage).classList.remove('active');
-    currentPage = 0;
-    document.getElementById('page-0').classList.add('active');
-    updateStepBar(0);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.location.href = 'thankyou.html';
   } catch (err) {
     console.error(err);
-    showToast('❌ 送信に失敗しました。時間をおいて再度お試しください。', 5000);
+    showToast('送信に失敗しました。時間をおいて再度お試しください。', 5000);
   } finally {
     btn.disabled = false;
-    btn.innerHTML = '✨ 分析を依頼';
+    btn.innerHTML = '分析を依頼';
   }
 }
 
