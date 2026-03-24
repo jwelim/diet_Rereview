@@ -529,7 +529,6 @@
 
   <!-- 受付番号バナー -->
   <div class="receipt-card">
-    <div class="receipt-icon">✅</div>
     <div class="receipt-text">
       <strong>送信が完了しました</strong>
       ご回答ありがとうございます。20分以内を目安にメールでお届けします。
@@ -574,7 +573,7 @@
       <div class="log-dot red"></div>
       <div class="log-dot yellow"></div>
       <div class="log-dot green"></div>
-      <div class="log-header-title">DIET ANALYZER v2.4.1 — LIVE LOG</div>
+      <div class="log-header-title">DIET ANALYZER</div>
     </div>
     <div class="log-body" id="logBody">
       <!-- JSで動的挿入 -->
@@ -602,8 +601,8 @@
       <div class="info-step">
         <span class="info-step-badge">Step 3</span>
         <div class="info-step-text">
-          <strong>アドバイス実践 → 体質改善へ</strong>
-          レポートの内容に沿って、あなたに合ったダイエット法を試してみてください。
+          <strong>分析内容を確認</strong>
+          体質の特徴や太る原因を意識し、自分に合ったダイエット方法を実践しましょう。
         </div>
       </div>
     </div>
@@ -614,7 +613,7 @@
     <!-- X でシェア -->
     <a class="btn-secondary" id="shareXBtn" href="#" target="_blank" rel="noopener">
       <span class="x-logo">𝕏</span>
-      <span>分析中の興奮をポスト</span>
+      <span>Xでポスト</span>
     </a>
     <!-- 問診票に戻る -->
     <a class="btn-ghost" href="index.html">
@@ -666,7 +665,7 @@ const LOGS = [
   { delay: 12400, type: "ok",  msg: "[OK]      最近接体質タイプ: マッチング完了" },
   { delay: 13300, type: "info",msg: "[GEN]     パーソナライズレポートを生成中..." },
   { delay: 14500, type: "ok",  msg: "[OK]      レポート生成完了 — メール送信予定" },
-  { delay: 15300, type: "ok",  msg: "[DONE] ✓  全解析プロセスが完了しました 🎉" },
+  { delay: 15300, type: "ok",  msg: "[DONE]    全解析プロセスが完了しました！！" },
 ];
 
 // ════════════════════════════════════════════════════════
@@ -744,10 +743,7 @@ LOGS.forEach(({ delay, type, msg }) => {
 
 // ── X シェアボタン ──────────────────────────────────
 const shareText = encodeURIComponent(
-  '【体質アルゴリズム解析中🌸】\n' +
-  'ダイエット無料分析の問診票を送信しました！\n' +
-  '代謝パワー・TIPI-Jスコアから、私だけのダイエット法を導き出し中…🔬\n' +
-  '#仕組み化ダイエット #体質分析'
+  '#REREVIEW #体質分析'
 );
 document.getElementById('shareXBtn').href =
   'https://twitter.com/intent/tweet?text=' + shareText;
