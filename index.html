@@ -1472,7 +1472,7 @@
         <h3>7. お問い合わせ・データの削除</h3>
         <p>ご自身の登録情報の確認、修正、または削除を希望される場合は、以下までご連絡ください。</p>
         <p style="margin-top:10px;padding:12px 16px;background:var(--soft);border-radius:10px;font-size:0.84rem;color:var(--subtext);">
-          お問い合わせ先：<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a5cdccd1cad7ccc1c08bc1ccc0d1e5c2c8c4ccc98bc6cac8">[email&#160;protected]</a>
+          お問い合わせ先：<a href="mailto:rereview.k@gmail.com">rereview.k@gmail.com</a>
         </p>
       </div>
 
@@ -1495,7 +1495,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 // ── Google Apps Script WebApp URL ──
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbz_oyyU3HPhRT28130DqlmOzYa2lvtZto6hzbEgl3ahL7eHFfo4ngC0XVbbe5iGIrw4IQ/exec';
   
@@ -1537,17 +1537,24 @@ function updateStepBar(page) {
   });
 }
 
+function isElementVisible(el) {
+  let node = el;
+  while (node && node !== document.body) {
+    const style = window.getComputedStyle(node);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    node = node.parentElement;
+  }
+  return true;
+}
+
 function goNext() {
   // 現在ページの必須項目チェック
   // ※ display:none の非表示グループ（cond-group 等）内の required は検証対象外とする
   const page = document.getElementById('page-' + currentPage);
   const allInputs = page.querySelectorAll('input[required], select[required], textarea[required]');
 
-  // 実際に画面に表示されている要素のみに絞る
-  const visibleInputs = [...allInputs].filter(el => {
-    // 自分自身または祖先に display:none があれば非表示と判定
-    return el.offsetParent !== null;
-  });
+  // 実際に画面に表示されている要素のみに絞る（computedStyle で判定）
+  const visibleInputs = [...allInputs].filter(el => isElementVisible(el));
 
   // ラジオは同名グループをまとめて1回だけ検証（重複チェック防止）
   const checkedRadioNames = new Set();
@@ -1559,7 +1566,7 @@ function goNext() {
       checkedRadioNames.add(inp.name);
       // 同じページ内の同名ラジオのうち表示中のもので1つでもチェックされていればOK
       const group = [...page.querySelectorAll('input[name="' + inp.name + '"]')]
-        .filter(r => r.offsetParent !== null);
+        .filter(r => isElementVisible(r));
       if (!group.some(r => r.checked)) {
         firstInvalid = inp;
         break;
@@ -1662,14 +1669,14 @@ async function submitForm() {
   // 最終ページのバリデーション（非表示の required は除外）
   const page = document.getElementById('page-' + currentPage);
   const allInputs = page.querySelectorAll('input[required], select[required], textarea[required]');
-  const visibleInputs = [...allInputs].filter(el => el.offsetParent !== null);
+  const visibleInputs = [...allInputs].filter(el => isElementVisible(el));
   const checkedRadioNames = new Set();
   for (const inp of visibleInputs) {
     if (inp.type === 'radio') {
       if (checkedRadioNames.has(inp.name)) continue;
       checkedRadioNames.add(inp.name);
       const group = [...page.querySelectorAll('input[name="' + inp.name + '"]')]
-        .filter(r => r.offsetParent !== null);
+        .filter(r => isElementVisible(r));
       if (!group.some(r => r.checked)) {
         inp.scrollIntoView({ behavior: 'smooth', block: 'center' });
         setTimeout(() => inp.reportValidity(), 300);
