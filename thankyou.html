@@ -9,29 +9,29 @@
 <!-- iOSのホーム画面追加用ファビコン -->
 <link rel="apple-touch-icon" href="favicon.png">
 
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --rose:    #f4a4b0;
-    --peach:   #fbc4ab;
-    --cream:   #fff8f5;
-    --blush:   #fde8e4;
-    --mauve:   #c97b8a;
-    --deep:    #7a3e50;
-    --soft:    #f9eff2;
-    --border:  #f0d5db;
-    --text:    #5a3a44;
-    --subtext: #a07080;
+    --rose:    #9cc9e5;
+    --peach:   #d9afd9;
+    --cream:   #f7fbfe;
+    --blush:   #eff1f7;
+    --mauve:   #6fa8cc;
+    --deep:    #2c5f7a;
+    --soft:    #eff1f7;
+    --border:  #d4e6f1;
+    --text:    #2d3a45;
+    --subtext: #7a9aac;
+    --accent:  #f68084;
     --white:   #ffffff;
-    --shadow:  0 4px 24px rgba(193,120,140,0.10);
+    --shadow:  0 4px 24px rgba(100,160,200,0.10);
     --radius:  18px;
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Zen Maru Gothic', sans-serif;
-    background: linear-gradient(135deg, #fce4ec 0%, #fdf3f0 40%, #e8f4f8 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+    background: linear-gradient(135deg, #e6f5f4 0%, #f1f5fe 100%);
     min-height: 100vh;
     color: var(--text);
     line-height: 1.7;
@@ -41,7 +41,7 @@
 
   /* ─── HEADER ─── */
   .site-header {
-    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 60%, #f9d4c2 100%);
+    background: linear-gradient(120deg, #9cc9e5 0%, #d9afd9 100%);
     text-align: center;
     padding: 40px 20px 32px;
     position: relative;
@@ -55,12 +55,12 @@
     pointer-events: none;
   }
   .site-header h1 {
-    font-family: 'Shippori Mincho', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
     font-size: clamp(1.2rem, 3.5vw, 1.7rem);
     font-weight: 600;
     color: #fff;
     letter-spacing: 0.08em;
-    text-shadow: 0 2px 8px rgba(122,62,80,0.2);
+    text-shadow: 0 2px 8px rgba(44,95,122,0.2);
     position: relative;
   }
   .site-header p {
@@ -120,7 +120,7 @@
 
   /* グラデーションヘッダー帯 */
   .card-header {
-    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 60%, #f9d4c2 100%);
+    background: linear-gradient(120deg, #9cc9e5 0%, #d9afd9 100%);
     padding: 22px 28px 18px;
     text-align: center;
     position: relative;
@@ -142,11 +142,11 @@
     margin-bottom: 6px;
   }
   .card-header-title {
-    font-family: 'Shippori Mincho', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
     font-size: clamp(1.3rem, 4vw, 1.7rem);
     font-weight: 600;
     color: #fff;
-    text-shadow: 0 2px 8px rgba(122,62,80,0.2);
+    text-shadow: 0 2px 8px rgba(44,95,122,0.2);
     letter-spacing: 0.06em;
     position: relative;
   }
@@ -187,15 +187,15 @@
     background: linear-gradient(135deg, var(--rose), var(--peach));
     border-radius: 50%;
     z-index: 3;
-    box-shadow: 0 0 12px rgba(244,164,176,0.6);
+    box-shadow: 0 0 12px rgba(156,201,229,0.6);
     animation: pulse 1.5s ease-in-out infinite;
   }
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
   @keyframes pulse {
-    0%, 100% { transform: scale(1); box-shadow: 0 0 12px rgba(244,164,176,0.6); }
-    50%       { transform: scale(1.25); box-shadow: 0 0 22px rgba(244,164,176,0.9); }
+    0%, 100% { transform: scale(1); box-shadow: 0 0 12px rgba(156,201,229,0.6); }
+    50%       { transform: scale(1.25); box-shadow: 0 0 22px rgba(156,201,229,0.9); }
   }
 
   /* ─── ANALYZING TEXT ─── */
@@ -216,7 +216,7 @@
     text-transform: uppercase;
   }
   .analyzing-step {
-    font-family: 'Shippori Mincho', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
     font-size: clamp(0.95rem, 2.5vw, 1.1rem);
     font-weight: 500;
     color: var(--deep);
@@ -250,7 +250,7 @@
     background: linear-gradient(90deg, var(--rose), var(--peach));
     width: 0%;
     transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 0 8px rgba(244,164,176,0.5);
+    box-shadow: 0 0 8px rgba(156,201,229,0.5);
     position: relative;
   }
   .progress-bar::after {
@@ -301,7 +301,7 @@
   }
   .log-dot.green  { background: #7ec98a; animation: blink 1.2s ease infinite; }
   .log-dot.yellow { background: #f9c74f; }
-  .log-dot.red    { background: #f4a4b0; }
+  .log-dot.red    { background: #9cc9e5; }
   @keyframes blink {
     0%, 100% { opacity: 1; }
     50%       { opacity: 0.3; }
@@ -349,7 +349,7 @@
   .log-msg { flex: 1; }
   .log-msg.ok   { color: #5a9e6a; }
   .log-msg.info { color: var(--text); }
-  .log-msg.warn { color: #c97b8a; }
+  .log-msg.warn { color: #6fa8cc; }
 
   /* ─── INFO CARD ─── */
   .info-card {
@@ -360,7 +360,7 @@
     animation: slideIn 0.5s 0.3s ease both;
   }
   .info-card-title {
-    font-family: 'Shippori Mincho', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
     font-size: 0.95rem;
     font-weight: 600;
     color: var(--deep);
@@ -422,23 +422,23 @@
     justify-content: center;
     gap: 10px;
     padding: 15px 28px;
-    background: linear-gradient(120deg, #c97b8a 0%, #f4a4b0 50%, #fbc4ab 100%);
+    background: linear-gradient(120deg, #6fa8cc 0%, #9cc9e5 50%, #d9afd9 100%);
     color: #fff;
     border: none;
     border-radius: 50px;
-    font-family: 'Zen Maru Gothic', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', sans-serif;
     font-size: 0.95rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     cursor: pointer;
-    box-shadow: 0 4px 18px rgba(244,164,176,0.42);
+    box-shadow: 0 4px 18px rgba(156,201,229,0.42);
     text-decoration: none;
     transition: transform 0.15s, box-shadow 0.15s;
     width: 100%;
   }
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(244,164,176,0.52);
+    box-shadow: 0 8px 28px rgba(156,201,229,0.52);
   }
   .btn-secondary {
     display: flex;
@@ -450,7 +450,7 @@
     color: var(--text);
     border: 2px solid #1a1a1a;
     border-radius: 50px;
-    font-family: 'Zen Maru Gothic', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', sans-serif;
     font-size: 0.92rem;
     font-weight: 700;
     letter-spacing: 0.04em;
@@ -464,6 +464,7 @@
     background: #1a1a1a;
     color: #fff;
   }
+
   /* X(旧Twitter) ロゴ */
   .x-logo {
     font-size: 1rem;
@@ -481,7 +482,7 @@
     color: var(--subtext);
     border: 1.5px solid var(--border);
     border-radius: 50px;
-    font-family: 'Zen Maru Gothic', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', sans-serif;
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
