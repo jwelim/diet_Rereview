@@ -8,27 +8,27 @@
 <link rel="icon" href="favicon.png" type="image/png">
 <!-- iOSのホーム画面追加用ファビコン -->
 <link rel="apple-touch-icon" href="favicon.png">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@300;400;500;700&family=Shippori+Mincho:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --rose:    #f4a4b0;
-    --peach:   #fbc4ab;
-    --cream:   #fff8f5;
-    --blush:   #fde8e4;
-    --mauve:   #c97b8a;
-    --deep:    #7a3e50;
-    --soft:    #f9eff2;
-    --border:  #f0d5db;
-    --text:    #5a3a44;
-    --subtext: #a07080;
+    --rose:    #9cc9e5;
+    --peach:   #d9afd9;
+    --cream:   #f7fbfe;
+    --blush:   #eff1f7;
+    --mauve:   #6fa8cc;
+    --deep:    #2c5f7a;
+    --soft:    #eff1f7;
+    --border:  #d4e6f1;
+    --text:    #2d3a45;
+    --subtext: #7a9aac;
+    --accent:  #f68084;
     --white:   #ffffff;
-    --shadow:  0 4px 24px rgba(193,120,140,0.10);
+    --shadow:  0 4px 24px rgba(100,160,200,0.10);
     --radius:  18px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    font-family: 'Zen Maru Gothic', sans-serif;
-    background: linear-gradient(135deg, #fce4ec 0%, #fdf3f0 40%, #e8f4f8 100%);
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+    background: #ffffff;
     min-height: 100vh;
     color: var(--text);
     line-height: 1.7;
@@ -36,7 +36,7 @@
 
   /* ─── HEADER ─── */
   .site-header {
-    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 60%, #f9d4c2 100%);
+    background: linear-gradient(120deg, #9cc9e5 0%, #d9afd9 100%);
     text-align: center;
     padding: 48px 20px 40px;
     position: relative;
@@ -49,12 +49,12 @@
     pointer-events: none;
   }
   .site-header h1 {
-    font-family: 'Shippori Mincho', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
     font-size: clamp(1.4rem, 4vw, 2rem);
     font-weight: 600;
     color: #fff;
     letter-spacing: 0.08em;
-    text-shadow: 0 2px 8px rgba(122,62,80,0.2);
+    text-shadow: 0 2px 8px rgba(44,95,122,0.2);
     position: relative;
   }
   .site-header p {
@@ -72,7 +72,7 @@
     background: rgba(255,255,255,0.95);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--border);
-    box-shadow: 0 2px 12px rgba(193,120,140,0.10);
+    box-shadow: 0 2px 12px rgba(100,160,200,0.10);
   }
   .stepbar {
     max-width: 720px;
@@ -129,7 +129,7 @@
     background: linear-gradient(135deg, var(--rose), var(--peach));
     border-color: var(--rose);
     color: #fff;
-    box-shadow: 0 0 0 4px rgba(244,164,176,0.22);
+    box-shadow: 0 0 0 4px rgba(156,201,229,0.22);
   }
   .step-node.done .step-circle {
     background: var(--mauve);
@@ -230,12 +230,12 @@
     margin-bottom: 20px;
   }
   .section-header {
-    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 100%);
+    background: linear-gradient(120deg, #9cc9e5 0%, #d9afd9 100%);
     padding: 18px 28px;
     color: #fff;
   }
   .section-header h2 {
-    font-family: 'Shippori Mincho', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
     font-size: 1.1rem;
     font-weight: 600;
     letter-spacing: 0.06em;
@@ -247,7 +247,7 @@
   }
   .section-subheader {
     padding: 16px 28px 4px;
-    color: var(--mauve);
+    color: var(--accent);
     font-size: 0.92rem;
     font-weight: 700;
     border-bottom: 2px solid var(--blush);
@@ -279,20 +279,20 @@
 
   /* ─── BADGES ─── */
   .badge { display: inline-block; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; }
-  .badge-req { background: #f4a4b0; color: #fff; }
-  .badge-opt { background: #b8d8ea; color: #fff; }
+  .badge-req { background: #f68084; color: #fff; }
+  .badge-opt { background: #9cc9e5; color: #fff; }
 
   /* ─── INPUTS ─── */
   input[type="text"], input[type="email"], input[type="number"], select, textarea {
     width: 100%; padding: 10px 14px;
     border: 1.5px solid var(--border); border-radius: 10px;
     background: var(--cream); color: var(--text);
-    font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.88rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', sans-serif; font-size: 0.88rem;
     transition: border-color 0.2s, box-shadow 0.2s; outline: none; max-width: 100%;
   }
   input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus, select:focus, textarea:focus {
     border-color: var(--rose);
-    box-shadow: 0 0 0 3px rgba(244,164,176,0.18);
+    box-shadow: 0 0 0 3px rgba(156,201,229,0.22);
   }
   textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
   select { height: 42px; cursor: pointer; }
@@ -335,7 +335,7 @@
   .period-note {
     margin: 0 28px 4px;
     padding: 10px 16px;
-    background: linear-gradient(90deg, rgba(244,164,176,0.12), rgba(251,196,171,0.10));
+    background: linear-gradient(90deg, rgba(156,201,229,0.12), rgba(217,175,217,0.10));
     border-left: 3px solid var(--rose);
     border-radius: 0 8px 8px 0;
     font-size: 0.82rem;
@@ -380,7 +380,7 @@
     display: inline-flex; align-items: center; justify-content: center; gap: 8px;
     padding: 13px 32px;
     border: none; border-radius: 50px;
-    font-family: 'Zen Maru Gothic', sans-serif; font-size: 0.92rem; font-weight: 700;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', sans-serif; font-size: 0.92rem; font-weight: 700;
     cursor: pointer; transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
     letter-spacing: 0.04em;
   }
@@ -388,23 +388,23 @@
     background: var(--white);
     color: var(--mauve);
     border: 2px solid var(--border);
-    box-shadow: 0 2px 8px rgba(193,120,140,0.08);
+    box-shadow: 0 2px 8px rgba(100,160,200,0.08);
   }
   .btn-prev:hover { border-color: var(--rose); transform: translateY(-1px); }
   .btn-next {
-    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 100%);
+    background: linear-gradient(120deg, #9cc9e5 0%, #d9afd9 100%);
     color: #fff;
-    box-shadow: 0 4px 18px rgba(244,164,176,0.40);
+    box-shadow: 0 4px 18px rgba(156,201,229,0.40);
   }
-  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(244,164,176,0.5); }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(156,201,229,0.5); }
   .btn-submit {
-    background: linear-gradient(120deg, #c97b8a 0%, #f4a4b0 50%, #fbc4ab 100%);
+    background: linear-gradient(120deg, #6fa8cc 0%, #9cc9e5 50%, #d9afd9 100%);
     color: #fff;
     padding: 15px 48px;
-    box-shadow: 0 4px 18px rgba(244,164,176,0.45);
+    box-shadow: 0 4px 18px rgba(156,201,229,0.45);
     font-size: 1rem;
   }
-  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(244,164,176,0.5); }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(156,201,229,0.5); }
   .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
   /* ─── PAGE COUNTER ─── */
@@ -434,7 +434,7 @@
   .modal-overlay {
     display: none;
     position: fixed; inset: 0;
-    background: rgba(90, 58, 68, 0.45);
+    background: rgba(44, 95, 122, 0.45);
     backdrop-filter: blur(4px);
     z-index: 2000;
     align-items: center;
@@ -447,7 +447,7 @@
   .modal-box {
     background: var(--white);
     border-radius: var(--radius);
-    box-shadow: 0 16px 48px rgba(90,58,68,0.22);
+    box-shadow: 0 16px 48px rgba(44,95,122,0.22);
     max-width: 680px;
     width: 100%;
     max-height: 88vh;
@@ -459,7 +459,7 @@
   @keyframes slideUp { from { transform: translateY(32px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
   .modal-header {
-    background: linear-gradient(120deg, #f4a4b0 0%, #fbc4ab 60%, #f9d4c2 100%);
+    background: linear-gradient(120deg, #9cc9e5 0%, #d9afd9 100%);
     padding: 20px 28px;
     display: flex;
     align-items: center;
@@ -467,7 +467,7 @@
     flex-shrink: 0;
   }
   .modal-header h2 {
-    font-family: 'Shippori Mincho', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
     font-size: 1.05rem;
     font-weight: 600;
     color: #fff;
@@ -500,7 +500,7 @@
   .pp-section { margin-bottom: 28px; }
   .pp-section:last-child { margin-bottom: 0; }
   .pp-section h3 {
-    font-family: 'Shippori Mincho', serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
     font-size: 0.95rem;
     font-weight: 600;
     color: var(--deep);
@@ -546,7 +546,7 @@
     line-height: 1.8;
     margin-top: 8px;
   }
-  .pp-section .pp-caution strong { color: var(--deep); }
+  .pp-section .pp-caution strong { color: var(--accent); }
   .pp-meta {
     margin-top: 28px;
     padding-top: 18px;
@@ -568,15 +568,15 @@
   .modal-footer .btn-modal-close {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 11px 36px;
-    background: linear-gradient(120deg, #f4a4b0, #fbc4ab);
+    background: linear-gradient(120deg, #9cc9e5, #d9afd9);
     color: #fff; border: none; border-radius: 50px;
-    font-family: 'Zen Maru Gothic', sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', sans-serif;
     font-size: 0.9rem; font-weight: 700;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(244,164,176,0.38);
+    box-shadow: 0 4px 14px rgba(156,201,229,0.38);
     transition: transform 0.15s, box-shadow 0.15s;
   }
-  .modal-footer .btn-modal-close:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(244,164,176,0.48); }
+  .modal-footer .btn-modal-close:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(156,201,229,0.48); }
 
   /* ─── AGREE CHECKBOX ─── */
   .agree-wrap {
@@ -602,7 +602,7 @@
     line-height: 1.5;
   }
   .agree-wrap label a {
-    color: var(--rose);
+    color: var(--accent);
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -1472,7 +1472,7 @@
         <h3>7. お問い合わせ・データの削除</h3>
         <p>ご自身の登録情報の確認、修正、または削除を希望される場合は、以下までご連絡ください。</p>
         <p style="margin-top:10px;padding:12px 16px;background:var(--soft);border-radius:10px;font-size:0.84rem;color:var(--subtext);">
-          お問い合わせ先：hitoride.diet@gmail.com
+          お問い合わせ先：<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="a5cdccd1cad7ccc1c08bc1ccc0d1e5c2c8c4ccc98bc6cac8">[email&#160;protected]</a>
         </p>
       </div>
 
@@ -1495,7 +1495,7 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ── Google Apps Script WebApp URL ──
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbz_oyyU3HPhRT28130DqlmOzYa2lvtZto6hzbEgl3ahL7eHFfo4ngC0XVbbe5iGIrw4IQ/exec';
   
@@ -1717,12 +1717,3 @@ function collectFormData(form) {
       data[key] = value;
     }
   }
-  for (const key in data) {
-    if (Array.isArray(data[key])) data[key] = data[key].join('、');
-  }
-  data['送信日時'] = new Date().toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' });
-  return data;
-}
-</script>
-</body>
-</html>
