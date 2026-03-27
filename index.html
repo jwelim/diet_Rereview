@@ -10,6 +10,10 @@
 <link rel="apple-touch-icon" href="favicon.png">
 <style>
   :root {
+    --sky:     #9cc9e5;
+    --white:   #ffffff;
+    --divider: #cdd8e3;
+    --stone:   #7a8699;
     --rose:    #9cc9e5;
     --peach:   #d9afd9;
     --cream:   #f7fbfe;
@@ -279,8 +283,8 @@ background: linear-gradient(135deg, #e6f5f4 0%, #f1f5fe 100%);
 
   /* ─── BADGES ─── */
   .badge { display: inline-block; width: fit-content; font-size: 0.65rem; font-weight: 700; padding: 3px 8px; border-radius: 4px; letter-spacing: 0.04em; }
-  .badge-req { background: #f68084; color: #fff; }
-  .badge-opt { background: #9cc9e5; color: #fff; }
+  .badge-req { background: #9cc9e5; color: #fff; }
+  .badge-opt { border: 1px solid var(--divider); color: var(--stone); }
 
   /* ─── INPUTS ─── */
   input[type="text"], input[type="email"], input[type="number"], select, textarea {
